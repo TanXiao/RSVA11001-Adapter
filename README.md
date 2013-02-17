@@ -159,7 +159,7 @@ Software Stack
 The software stack is 
 
 * U-Boot Universal Loader
-* Linux > 2.6 with a modular kernel
+* Linux 2.6.24 with a modular kernel
 * A number of proprietary kernel modules for the special purpose hardware, for example one is labelled 74hc1605 which is a discrete flip-flop.
 * Proprietary kernel modules for hardware encoding of video, etc. There are some files referencing an FPGA, so this is a very general purpose core.
 * Busybox userspace
