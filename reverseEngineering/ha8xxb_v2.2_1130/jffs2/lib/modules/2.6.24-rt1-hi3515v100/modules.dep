@@ -1,0 +1,298 @@
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/8021q/8021q.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/aes_generic.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/key/af_key.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/packet/af_packet.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/ah4.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/ah6.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/ipv6.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/ata/ahci.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/airprime.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/anubis.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/block/aoe/aoe.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/misc/appledisplay.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/video/backlight/backlight.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/arc4.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/ark3116.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/block/as-iosched.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/asix.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/usbnet.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/spi/at25.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/misc/auerswald.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/autofs/autofs.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/wireless/b43/b43.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/ssb/ssb.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/char/hw_random/rng-core.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/mac80211/mac80211.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/wireless/cfg80211.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/wireless/b43legacy/b43legacy.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/ssb/ssb.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/char/hw_random/rng-core.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/mac80211/mac80211.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/wireless/cfg80211.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/video/backlight/backlight.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/belkin_sa.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/blkcipher.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/blowfish.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/bonding/bonding.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/broadcom.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/libphy.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/bsd_comp.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/ppp_generic.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/slhc.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/cast5.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/cast6.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/catc.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/cbc.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/blkcipher.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/class/cdc-acm.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/cdc_ether.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/usbnet.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/cdc_subset.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/usbnet.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/cdrom/cdrom.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/wireless/cfg80211.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/block/cfq-iosched.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/scsi/ch.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/cicada.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/libphy.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/cifs/cifs.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/configfs/configfs.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/cp2101.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/lib/crc-ccitt.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/lib/crc-itu-t.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/lib/crc16.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/crc32c.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/lib/crc7.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/crypto_hash.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/crypto_null.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/block/cryptoloop.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/cyberjack.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/cypress_m8.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/davicom.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/libphy.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/deflate.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/des_generic.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/digi_acceleport.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/dlm/dlm.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/configfs/configfs.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/chips/ds1337.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/i2c-core.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/chips/ds1374.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/i2c-core.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/dummy.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/ecb.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/blkcipher.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/chips/eeprom.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/i2c-core.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/misc/eeprom_93cx6.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/misc/emi26.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/misc/emi62.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/empeg.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/esp4.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/esp6.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/ipv6.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/input/evdev.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/ext2/ext2.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/ext3/ext3.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/jbd/jbd.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/fat/fat.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/video/fb.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/video/fb_sys_fops.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/fixed.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/libphy.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/ftdi_sio.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/funsoft.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/fuse/fuse.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/gadget/g_file_storage.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/gadget/m66592-udc.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/gadget/g_serial.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/gadget/m66592-udc.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/input/gameport/gameport.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/garmin_gps.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/gfs2/gfs2.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/gl620a.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/usbnet.ko
+/lib/modules/2.6.24-rt1-hi3515v100/misc/hi_ir.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/misc/hi_mci.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/mmc/core/mmc_core.ko
+/lib/modules/2.6.24-rt1-hi3515v100/misc/hidmac.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/misc/hiether.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/libphy.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/hmac.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/crypto_hash.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/wireless/hostap/hostap.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ieee80211/ieee80211_crypt.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/hp4x.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/algos/i2c-algo-bit.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/i2c-core.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/algos/i2c-algo-pca.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/i2c-core.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/algos/i2c-algo-pcf.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/i2c-core.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/i2c-core.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/i2c-dev.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/i2c-core.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/busses/i2c-parport-light.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/algos/i2c-algo-bit.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/i2c-core.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/busses/i2c-stub.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/i2c-core.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/icplus.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/libphy.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/misc/idmouse.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ieee80211/ieee80211.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ieee80211/ieee80211_crypt.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ieee80211/ieee80211_crypt.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ieee80211/ieee80211_crypt_ccmp.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ieee80211/ieee80211_crypt.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ieee80211/ieee80211_crypt_tkip.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ieee80211/ieee80211_crypt.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ieee80211/ieee80211_crypt_wep.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ieee80211/ieee80211_crypt.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ieee80211/softmac/ieee80211softmac.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ieee80211/ieee80211.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ieee80211/ieee80211_crypt.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/inet_diag.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/inet_lro.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/io_edgeport.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/io_ti.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/ip6_tunnel.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/tunnel6.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/ipv6.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/ip_gre.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/ipaq.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/ipcomp.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/ipcomp6.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/xfrm6_tunnel.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/tunnel6.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/ipv6.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/ipip.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/tunnel4.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/ipv6.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/ipw.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/ir-usb.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/isofs/isofs.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/jbd/jbd.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/jfs/jfs.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/input/joydev.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/kaweth.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/keyspan.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/keyspan_pda.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/khazad.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/kl5kusb105.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/kobil_sct.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/video/backlight/lcd.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/misc/ldusb.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/misc/legousbtower.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/libphy.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/scsi/libsas/libsas.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/scsi/scsi_transport_sas.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/input/gameport/lightning.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/input/gameport/gameport.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/gfs2/locking/dlm/lock_dlm.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/gfs2/gfs2.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/dlm/dlm.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/configfs/configfs.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/gfs2/locking/nolock/lock_nolock.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/gfs2/gfs2.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/lockd/lockd.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/sunrpc/sunrpc.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/lxt.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/libphy.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/gadget/m66592-udc.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/mac80211/mac80211.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/wireless/cfg80211.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/marvell.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/libphy.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/chips/max6875.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/i2c-core.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/mct_u232.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/md4.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/md5.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/image/mdc800.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/michael_mic.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/image/microtek.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/mmc/card/mmc_block.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/mmc/core/mmc_core.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/mmc/core/mmc_core.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/misc/mmz.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/input/mousedev.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/msdos/msdos.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/fat/fat.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/navman.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/block/nbd.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/net1080.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/usbnet.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nfs/nfs.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/lockd/lockd.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nfs_common/nfs_acl.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/sunrpc/sunrpc.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nfs_common/nfs_acl.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/sunrpc/sunrpc.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_ascii.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp1250.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp1251.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp1255.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp737.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp775.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp850.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp852.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp855.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp857.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp860.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp861.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp862.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp863.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp864.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp865.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp866.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp869.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp874.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp932.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp936.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp949.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_cp950.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_euc-jp.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_iso8859-13.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_iso8859-14.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_iso8859-15.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_iso8859-2.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_iso8859-3.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_iso8859-4.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_iso8859-5.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_iso8859-6.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_iso8859-7.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_iso8859-9.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_koi8-r.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_koi8-ru.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_koi8-u.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/nls/nls_utf8.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/input/gameport/ns558.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/input/gameport/gameport.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/ntfs/ntfs.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/omninet.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/option.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/scsi/osst.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/video/output.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/wireless/p54common.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/mac80211/mac80211.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/wireless/cfg80211.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/chips/pca9539.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/i2c-core.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/chips/pcf8574.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/i2c-core.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/chips/pcf8591.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/i2c/i2c-core.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/pegasus.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/block/pktcdvd.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/cdrom/cdrom.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/pl2303.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/plusb.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/usbnet.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/ppp_async.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/ppp_generic.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/slhc.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/lib/crc-ccitt.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/ppp_deflate.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/ppp_generic.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/slhc.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/ppp_generic.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/slhc.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/ppp_synctty.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/ppp_generic.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/slhc.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/input/mouse/psmouse.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/qsemi.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/libphy.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/scsi/raid_class.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/reiserfs/reiserfs.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/misc/rio500.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/rndis_host.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/cdc_ether.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/usbnet.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/char/hw_random/rng-core.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/wireless/rt2x00/rt2500usb.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/wireless/rt2x00/rt2x00usb.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/wireless/rt2x00/rt2x00lib.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/lib/crc-itu-t.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/mac80211/mac80211.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/wireless/cfg80211.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/wireless/rt2x00/rt2x00lib.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/mac80211/mac80211.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/wireless/cfg80211.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/lib/crc-itu-t.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/wireless/rt2x00/rt2x00usb.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/wireless/rt2x00/rt2x00lib.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/lib/crc-itu-t.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/mac80211/mac80211.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/wireless/cfg80211.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/wireless/rt2x00/rt73usb.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/wireless/rt2x00/rt2x00usb.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/wireless/rt2x00/rt2x00lib.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/lib/crc-itu-t.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/mac80211/mac80211.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/wireless/cfg80211.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/rtc/rtc-core.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/rtl8150.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/wireless/rtl8187.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/mac80211/mac80211.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/wireless/cfg80211.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/misc/eeprom_93cx6.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/safe_serial.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/scsi/scsi_tgt.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/scsi/scsi_transport_fc.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/scsi/scsi_transport_iscsi.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/scsi/scsi_transport_sas.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/scsi/scsi_transport_spi.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/scsi/scsi_transport_srp.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/scsi/scsi_wait_scan.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/sctp/sctp.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/ipv6.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/scsi/sd_mod.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/input/serio/serio_raw.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/input/mouse/sermouse.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/serpent.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/input/serio/serport.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/scsi/sg.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/sha1_generic.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/sha256_generic.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/sha512.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/sierra.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/sit.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/tunnel4.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/ipv6.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/slhc.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/slip.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/slhc.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/smbfs/smbfs.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/smsc.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/libphy.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/watchdog/softdog.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/scsi/sr_mod.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/cdrom/cdrom.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/ssb/ssb.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/scsi/st.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/sunrpc/sunrpc.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/video/syscopyarea.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/video/sysfillrect.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/video/sysimgblt.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/tcp_diag.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/inet_diag.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/tea.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/tgr192.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/ti_usb_3410_5052.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/tun.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/tunnel4.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/tunnel6.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/ipv6.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/twofish.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/twofish_common.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/twofish_common.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/block/ub.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/udf/udf.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/storage/usb-storage.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/hid/usbhid/usbhid.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/misc/usblcd.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/misc/usbled.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/usbnet.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/misc/usbtest.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/vfat/vfat.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/fat/fat.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/video/vfb.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/video/fb.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/video/fb_sys_fops.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/video/sysimgblt.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/video/sysfillrect.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/video/syscopyarea.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/visor.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/vitesse.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/phy/libphy.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/whiteheat.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/usb/serial/usbserial.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/wp512.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/xcbc.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/crypto/crypto_hash.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/xfrm4_mode_beet.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/xfrm4_mode_transport.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/xfrm4_mode_tunnel.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/xfrm4_tunnel.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv4/tunnel4.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/xfrm6_mode_beet.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/ipv6.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/xfrm6_mode_transport.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/xfrm6_mode_tunnel.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/xfrm6_tunnel.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/tunnel6.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ipv6/ipv6.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/fs/xfs/xfs.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/zaurus.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/cdc_ether.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/usb/usbnet.ko
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/wireless/zd1201.ko:
+/lib/modules/2.6.24-rt1-hi3515v100/kernel/drivers/net/wireless/zd1211rw/zd1211rw.ko: /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ieee80211/softmac/ieee80211softmac.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ieee80211/ieee80211.ko /lib/modules/2.6.24-rt1-hi3515v100/kernel/net/ieee80211/ieee80211_crypt.ko

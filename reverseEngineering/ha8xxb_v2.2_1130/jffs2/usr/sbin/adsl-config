@@ -1,0 +1,73 @@
+#!/bin/sh
+
+# From AUTOCONF
+dirpath=
+#dirpath=/home/tzlei/rootbox_ppp/rootbox
+prefix=/usr
+exec_prefix=${prefix}
+
+# Paths to programs
+
+CONFIG=$dirpath/tmp/tmpfs/pppoe.conf
+
+copy() {
+    cp $1 $2
+    if [ "$?" != 0 ] ; then
+	echo "*** Error copying $1 to $2"
+	echo "*** Quitting."
+	exit 1
+    fi
+}
+# Check for command-line overriding of ETH and USER
+case "$#" in                
+    3)                    
+        E="$1"            
+        U="$2"           
+	PWD1="$3"
+        ;;                  
+esac                      
+
+if [ "$#" -ne "3" ]; then
+	echo "Usage: adsl-config interface username userpasswd"
+	exit 1
+fi
+
+#echo $E
+#echo $U
+#echo $PWD1
+#echo $CONFIG-bak
+#exit 0
+
+copy $CONFIG $CONFIG-bak
+
+# Some #$(*& ISP's use a slash in the user name...
+sed -e "s&^USER=.*&USER='$U'&" \
+    -e "s/^ETH=.*/ETH='$E'/" \
+    < $CONFIG-bak > $CONFIG
+
+if [ $? != 0 ] ; then
+#    echo "** Error modifying $CONFIG"
+#    echo "** Quitting"
+    exit 1
+fi
+
+echo "Adjusting /etc/ppp/pap-secrets and /etc/ppp/chap-secrets"
+if [ -r $dirpath/tmp/tmpfs/pap-secrets ] ; then
+#    echo "  (But first backing it up to /etc/ppp/pap-secrets-bak)"
+    copy $dirpath/tmp/tmpfs/pap-secrets $dirpath/tmp/tmpfs/pap-secrets-bak
+else
+    cp /dev/null $dirpath/tmp/tmpfs/pap-secrets-bak
+fi
+if [ -r $dirpath/tmp/tmpfs/chap-secrets ] ; then
+#    echo "  (But first backing it up to /etc/ppp/chap-secrets-bak)"
+    copy $dirpath/tmp/tmpfs/chap-secrets $dirpath/tmp/tmpfs/chap-secrets-bak
+else
+    cp /dev/null $dirpath/tmp/tmpfs/chap-secrets-bak
+fi
+
+#egrep -v "^$U|^\"$U\"" $dirpath/etc/ppp/pap-secrets-bak > $dirpath/etc/ppp/pap-secrets
+echo "\"$U\"	*	\"$PWD1\"" > $dirpath/tmp/tmpfs/pap-secrets
+#egrep -v "^$U|^\"$U\"" $dirpath/etc/ppp/chap-secrets-bak > $dirpath/etc/ppp/chap-secrets
+echo "\"$U\"	*	\"$PWD1\"" > $dirpath/tmp/tmpfs/chap-secrets
+
+exit 0

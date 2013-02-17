@@ -1,0 +1,1 @@
+KERNEL=="sd*", SUBSYSTEM=="block",DRIVERS=="usb-storage", NAME="udisk%k"

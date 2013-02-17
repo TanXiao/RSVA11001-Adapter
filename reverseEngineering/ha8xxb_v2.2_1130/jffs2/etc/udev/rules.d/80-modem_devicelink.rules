@@ -1,0 +1,58 @@
+#ACTION!="add|change", GOTO="RULES_END"
+#SUBSYSTEM!="usb", GOTO="RULES_END"
+
+ATTRS{idVendor}=="12d1", GOTO="HUAWEI"
+ATTRS{idVendor}=="19d2", GOTO="ZTE"
+GOTO="RULES_END"
+
+
+LABEL="HUAWEI"
+# HUAWEI E173, E1820
+ATTRS{idProduct}=="1001", GOTO="ttyUSB0_ModemLink"
+# HUAWEI E220, E160G, E156G
+ATTRS{idProduct}=="1003", GOTO="ttyUSB0_ModemLink"
+# HUAWEI E1550, E169u, E1750
+ATTRS{idProduct}=="140c", GOTO="ttyUSB0_ModemLink"
+# HUAWEI ????
+ATTRS{idProduct}=="1406", GOTO="ttyUSB0_ModemLink"
+ATTRS{idProduct}=="140b", GOTO="ttyUSB0_ModemLink"
+ATTRS{idProduct}=="1412", GOTO="ttyUSB0_ModemLink"
+ATTRS{idProduct}=="1415", GOTO="ttyUSB0_ModemLink"
+ATTRS{idProduct}=="14ac", GOTO="ttyUSB0_ModemLink"
+GOTO="RULES_END"
+
+
+LABEL="ZTE"
+#ZTE MF100, MF112, MF637, MF636, MF627, MF626
+ATTRS{idProduct}=="0031", GOTO="ttyUSB2_ModemLink"
+#ZTE MF180
+ATTRS{idProduct}=="0117", GOTO="ttyUSB2_ModemLink"
+#ZTE ????
+ATTRS{idProduct}=="0001", GOTO="ttyUSB2_ModemLink"
+ATTRS{idProduct}=="0002", GOTO="ttyUSB2_ModemLink"
+ATTRS{idProduct}=="0015", GOTO="ttyUSB2_ModemLink"
+ATTRS{idProduct}=="0016", GOTO="ttyUSB2_ModemLink"
+ATTRS{idProduct}=="0017", GOTO="ttyUSB2_ModemLink"
+ATTRS{idProduct}=="0037", GOTO="ttyUSB2_ModemLink"
+ATTRS{idProduct}=="0052", GOTO="ttyUSB2_ModemLink"
+ATTRS{idProduct}=="0055", GOTO="ttyUSB2_ModemLink"
+ATTRS{idProduct}=="0063", GOTO="ttyUSB2_ModemLink"
+ATTRS{idProduct}=="0064", GOTO="ttyUSB2_ModemLink"
+ATTRS{idProduct}=="0108", GOTO="ttyUSB2_ModemLink"
+ATTRS{idProduct}=="0128", GOTO="ttyUSB2_ModemLink"
+GOTO="RULES_END"
+
+
+LABEL="ttyUSB0_ModemLink"
+KERNEL=="ttyUSB0", SYMLINK+="modem", GOTO="RULES_END"
+GOTO="RULES_END"
+
+LABEL="ttyUSB1_ModemLink"
+KERNEL=="ttyUSB1", SYMLINK+="modem", GOTO="RULES_END"
+GOTO="RULES_END"
+
+LABEL="ttyUSB2_ModemLink"
+KERNEL=="ttyUSB2", SYMLINK+="modem", GOTO="RULES_END"
+
+
+LABEL="RULES_END"

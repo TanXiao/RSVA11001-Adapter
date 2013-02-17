@@ -17,7 +17,8 @@ the web interface and get most of what I needed from that.
 Analysis
 ------
 The HTTP server on the box is extremely glitchy. While Newegg claims it is linux
-powered, my guess is that all the code is actually running bare-metal.
+powered, my guess is that all the code is actually running kernel mode
+or something equally bizarre.
 Sending it **well-formed** HTTP requests can crash it if the request
 is not in the tiny grammar that the DVR accepts. It apprently does have
 some sort of hardware-watchdog, because the box will thankfully reboot
@@ -47,6 +48,44 @@ bytes then closes the connection.
 best-practices experience, but a 'can do' attitude. It does work, but 
 things like function calls are passed over in preference to complicated
 while loops.
+
+If you goto the [product page](http://www.rosewill.com/support/Support_Download.aspx?ids=26_133_412_1952)
+you can download what appears to be firmware for the device. There is no 
+explanation of what it is, or how to upgrade the device. But, inspecting it
+with a hex editor reveals strings such as  "U-Boot 2008.10-svn (Dec  3 2012 - 15:25:46)".
+This makes me think that the device is using GPL'd software.  Other symbols in the blob are
+
+    nand_select_chip
+    nand_transfer_oob
+    nand_fill_oob
+    nand_scan_tail
+
+These are definitely linux kernel functions. I also found the following
+linux kernel image boot lines
+
+    console=ttyAMA0,115200 root=1f02 rootfstype=jffs2 mtdparts=physmap-flash.0:384K(boot),1280K(kernel),5M(rootfs),9M(app),128K(para),128K(init_logo) busclk=220000000
+    bootargs=console=ttyAMA0,115200 root=1f02 rootfstype=jffs2 mtdparts=physmap-flash.0:384K(boot),1280K(kernel),5M(rootfs),9M(app),128K(para),128K(init_logo) busclk=220000000
+    bootcmd=showlogo;bootm 0x80060000.bootdelay=1.baudrate=115200.ethaddr=00:16:55:00:00:00.ipaddr=192.168.0.100.serverip=192.168.0.1.gatewayip=192.168.0.1.netmask=255.255.255.0.bootfile="uImage"
+
+Apparently ttyAMA0 refers to a serial port on the SoC.
+
+There is pretty obviously a busybox binary on there. They didn't
+even both renaming it to 'VeryBusyBox' or something like that.
+
+These lines are the password for the root user in /etc/shadow format
+
+    root:$1$$qRPK7m23GJusamGpoGLby/:0:0::/root:/bin/sh
+    root:ab8nBoH3mb8.g:0:0::/root:/bin/sh
+    
+If someone wants to decrypt those, it would be of a great aid. A rainbow
+table can probably be used.
+
+It should be possible to force them to release the source code, or at least force
+Newegg since it is an American company.
+
+After more browsing I realized I was just looking at a JFFS2 filesystem
+the hard way, so I extracted it from the firmware. It is under the 
+reverse engineering directory.
 
 Problem
 ----

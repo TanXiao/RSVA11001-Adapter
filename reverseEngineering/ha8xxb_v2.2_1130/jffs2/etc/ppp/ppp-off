@@ -1,0 +1,45 @@
+#!/bin/sh
+######################################################################
+#
+# Determine the device to be terminated.
+# Author: jiangyanfeng@gmail.com
+# Date: Apr-7,2008
+#
+#if [ "$1" = "" ]; then
+#	echo "ERROR: Parameter error"
+#	echo "Usage: $0 <device_filename>"
+#	echo "eg: $0 /dev/ttyUSB0"
+#	exit 1
+#else
+#	DEVICE=$1
+#fi
+
+######################################################################
+#
+
+#PID=`ps -w | grep -v grep | grep "$DEVICE" | grep "pppd" | awk '{ print $1; exit }'`
+PID=`ps -w | grep -v grep | grep "modem" | grep "pppd" | awk '{ print $1; exit }'`
+
+
+if test $PID; then
+        kill -INT $PID
+
+        if [ ! "$?" = "0" ]; then
+                echo "ERROR: Terminated ppp link to $DEVICE failed"
+                exit 3
+        fi
+#
+# Success. wait 3 seconds to let pppd clean up its own junk.
+		if [ -f /tmp/tmpfs/resolv.conf-bak ]
+        then
+                echo "resume resolv.conf from resolv.conf-bak"
+                rm -f /tmp/tmpfs/resolv.conf
+                mv /tmp/tmpfs/resolv.conf-bak /tmp/tmpfs/resolv.conf				
+        fi
+        echo 0 > /tmp/tmpfs/pppoe
+        echo "PPP link to $DEVICE terminated"
+        exit 0
+fi
+#
+echo "ERROR: PPP link is not active on $DEVICE"
+exit 2

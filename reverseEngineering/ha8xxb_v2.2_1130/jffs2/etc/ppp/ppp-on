@@ -1,0 +1,134 @@
+#!/bin/sh
+#
+# Script to initiate a ppp connection. This is the first part of the
+# pair of scripts. This is not a secure pair of scripts as the codes
+# are visible with the 'ps' command.  However, it is simple.
+# Modify: fangxiaozhi <huananhu@huawei.com>
+programName=${0##*/}
+# These are the parameters. Change as needed.
+
+DEVICE=/dev/modem	# The modem file name of the data card
+TELEPHONE=*99#		# The telephone number for the connection, by default, it will be *99#
+ACCOUNT=beeline		# The account name for logon, by default, it  will be null
+PASSWORD=beeline	# The password for this account, by default, it  will be null
+#APN=internet.beeline.ru
+APN=Internet
+
+show_usage(){
+  echo "usage:"
+  echo "  $programName [--dev=device] [--pn=phonenumber] [--usr=username] [--pwd=password] [--apn=apn]"
+  echo ""
+  echo "device:      The device path and name for dial-up"
+  echo "phonenumber: The phone  number for dialing up, by default, it will be *99#"
+  echo "username:    The account name get from your ISP, by default, it will be null."
+  echo "password:    The password for your account, by default, it will be null."
+  echo "apn:         This value is provided by your ISP for internet."
+  exit 0
+}
+
+if [ $# -eq 1 -a "$1" = "--help" ]
+then
+	show_usage
+fi
+
+for i in "$@"
+do
+    case $i in
+       --dev=*)    
+            DEVICE=${i#--dev=}
+            ;;
+       --pn=*)
+            TELEPHONE=${i#--pn=}
+            ;;
+       --usr=*)
+            ACCOUNT=${i#--usr=}
+            ;;
+       --pwd=*)
+            PASSWORD=${i#--pwd=}
+            ;;
+       --apn=*)
+            APN=${i#--apn=}
+            ;;
+          *)
+            echo "*=$i"
+   esac
+
+done
+
+if [ "$6" = "" ]; then
+        LOCAL_IP=0.0.0.0
+else
+        LOCAL_IP=$5
+fi
+
+if [ "$7" = "" ]; then
+        REMOTE_IP=0.0.0.0
+else
+        REMOTE_IP=$6
+fi
+
+if [ ! "$8" = "" ]; then
+	USEPEERDNS=''
+	for NAMESERVER in `echo $8 | awk -F: '{for (i=1;i<=NF;i++) print $i}'`
+	do
+        	echo "nameserver $NAMESERVER" >> /etc/ppp/resolv.conf
+	done
+else
+	USEPEERDNS='usepeerdns'
+fi
+
+#backup resolv.conf
+cp /tmp/tmpfs/resolv.conf /tmp/tmpfs/resolv.conf-bak
+rm -f /tmp/tmpfs/resolv.conf
+
+NETMASK=255.255.255.0	# The proper netmask if needed
+
+#
+# Export them so that they will be available at 'ppp-on-dialer' time.
+export DEVICE TELEPHONE APN ACCOUNT PASSWORD
+
+# 
+# This is the location of the script which dials the phone and logs
+# in.  Please use the absolute file name as the $PATH variable is not
+# used on the connect option.  (To do so on a 'root' account would be
+# a security hole so don't ask.)
+#
+DIALER_SCRIPT=/etc/ppp/ppp-on-dialer
+
+# Initiate the connection
+# 
+# I put most of the common options on this command. Please, don't
+# forget the 'lock' option or some programs such as mgetty will not
+# work. The asyncmap and escape will permit the PPP link to work with
+# a telnet or rlogin connection. You are welcome to make any changes
+# as desired. Don't use the 'defaultroute' option if you currently
+# have a default route to an ethernet gateway.
+#
+exec /usr/sbin/pppd debug lock nodetach crtscts modem $DEVICE 115200 \
+	$USEPEERDNS noauth noipdefault defaultroute \
+	name "$ACCOUNT" password "$PASSWORD" connect $DIALER_SCRIPT &
+
+#detect network connect status
+echo "detect 3G ready"
+sleep 3
+echo "detect 3G go"
+while [ true ] ; do
+        ret=`/etc/ppp/ppp-status`
+        if [ "$ret" = "connected" ]
+        then
+                ln -s /tmp/tmpfs/resolv_server.conf /tmp/tmpfs/resolv.conf
+                echo 1 > /tmp/tmpfs/pppoe
+                echo "good"
+                exit 1
+        elif [ "$ret" = "connecting" ]; then
+                echo "connecting"
+        else
+                mv /tmp/tmpfs/resolv.conf-bak /tmp/tmpfs/resolv.conf
+                echo 0 > /tmp/tmpfs/pppoe
+                echo "connect fail!!"
+                exit 2
+        fi
+        sleep 1
+done
+
+exit 0

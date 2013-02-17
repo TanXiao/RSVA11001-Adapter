@@ -1,0 +1,13 @@
+ACTION!="add", GOTO="modeswitch_rules_end"
+#SUBSYSTEM!="usb", GOTO="modeswitch_rules_end"
+
+# ZTE MF637, MF626, MF100
+ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="2000", RUN+="/usr/bin/eject /dev/%k", GOTO="modeswitch_rules_end"
+# ZTE MF112
+ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0103", RUN+="/usr/bin/eject /dev/%k", GOTO="modeswitch_rules_end"
+
+# Other USB 3G Modem adding here
+
+
+
+LABEL="modeswitch_rules_end"

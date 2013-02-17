@@ -1,0 +1,29 @@
+#!/bin/sh
+##################################################
+# ddns client
+# Author: leitz@sin360.net 2007.04.25
+##################################################
+DIRINCLUDE="/usr/sbin/ddns"
+
+. ${DIRINCLUDE}/ddnsrc
+
+echo "DDNS started"
+
+while [ 1 ]
+do
+	if ! [ -r ${CONFIGFILE} ] || ! [ -r ${RUNDDNSCMD} ] 
+	then
+		echo "Not Config DDNS"
+	else
+		echo "Doing DDNS..."
+		[ -f ${LOGFILE} ] && ${RMCMD} ${LOGFILE}
+		if ! [ -r ${CONFIGFILE} ] || ! [ -r ${RUNDDNSCMD} ]; then
+			echo "Not Config DDNS Protocol type"
+#			exit 1
+		fi
+		${RUNDDNSCMD} > ${LOGFILE} 2>&1		
+	fi
+	${SLEEPCMD} ${INTERVALTIME}
+done
+
+exit 0

@@ -1,0 +1,58 @@
+#!/bin/sh
+
+if ! [ -a dev/console ] ;
+then
+	mknod dev/console c 5 1 
+	mknod dev/ttyAMA0 c 204 64
+        mknod dev/ttyAMA1 c 204 65
+        mknod dev/ttyS000 c 204 64
+
+	if [ $? -ne 0 ] ;
+	then
+		echo "'mknod dev/console c 5 1' failed!"
+		[ "$USER" = "root" ] && { echo "unknown error!" >&2; exit 1; }
+		cat << EOF
+
+  To mknod rootfs/dev/console，you need super privilege.
+  If you known the root passwd, choose 1, or you are in sudoers, choose 2.
+  Recommend, you can ask the admin to run command 'chmod a+s /bin/mknod' to add 's' flag on /bin/mknod, and then, select 'Try again'.
+  You can select 'Ignore' to continue without error, and create the rootfs/dev/console manually when you use the rootfs.
+
+  创建rootfs/dev/console节点，必须要超级用户的权限或者类似的超级权限.
+  如果你有root密码，那么选择1，或者你有sudo的权限，那么选择2.
+  强烈建议你请求管理员运行命令'chmod a+x /bin/mknod'来为/bin/mknod设置粘滞位，然后选择'Try again'.
+  如果你选择'Ignore'，那么将不创建rootfs/dev/console节点，你需要在使用rootfs的时候手动创建该节点.
+
+EOF
+		echo "No privilege!"
+		echo "Continue by select:"
+		
+		select choose in 'I have root passwd' 'I have sudo privilege' 'Try again' 'Ignore' 'Aboart' 
+		do
+			case $choose in
+			*root*)
+				su -c "mknod dev/console c 5 1"
+				[ $? == 0 ] && break
+				;;
+			*sudo*)
+				sudo mknod dev/console c 5 1
+				[ $? == 0 ] && break
+				;;
+			Try*)
+				mknod dev/console c 5 1 
+				[ $? == 0 ] && break
+				;;
+			Ignore)
+				exit 0
+				;;
+			Aboart)
+				exit 1
+				;;
+			*)
+				echo "Invalid select, please try again!" >&2
+				;;
+			esac
+		done
+	fi
+fi
+

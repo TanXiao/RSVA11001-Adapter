@@ -1,0 +1,50 @@
+#!/bin/sh
+##################################################
+# ddns client
+# Author: leitz@sin360.net 2007.04.25
+##################################################
+DIRINCLUDE="/usr/sbin/ddns"
+
+. ${DIRINCLUDE}/ddnsrc
+
+hostname=""
+username=""
+userpasswd=""
+ispname=""
+dnsserver=""
+isproxy="no"
+
+if [ "$#" -lt "5" ]; then
+	echo "Usage: ddns-config hostname username userpasswd ispname isproxy [dnsserver]"
+	echo "Usage: ddns-config stop"
+	if [ "$#" -eq "1" ] && [ "$1" == "stop" ]; then
+		[ -f ${CONFIGFILE} ] && ${RMCMD} ${CONFIGFILE}
+	fi
+	exit 1
+fi
+
+hostname="$1"            
+username="$2"           
+userpasswd="$3"
+ispname="$4"
+isproxy="$5"
+dnsserver="$6"
+
+echo "DOMAINNAME=${hostname}" > ${CONFIGFILE}
+echo "USERNAME=${username}" >>  ${CONFIGFILE}
+echo "USERPASSWORD=${userpasswd}" >> ${CONFIGFILE}
+echo "ISPNAME=${ispname}" >> ${CONFIGFILE}
+echo "DNSSERVER=${dnsserver}" >> ${CONFIGFILE}
+echo "ISPROXY=${isproxy}" >> ${CONFIGFILE}
+
+
+if ! [ "${ispname}" == "" ] && [ -f ${RUNDDNSCMD}.${ispname} ]
+then
+	[ -f ${RUNDDNSCMD} ] && ${RMCMD} ${RUNDDNSCMD}
+	[ -f ${RUNDDNSCMD}.${ispname} ] && ${LINKCMD} ${RUNDDNSCMD}.${ispname} ${RUNDDNSCMD} && chmod +x ${RUNDDNSCMD}
+fi
+
+[ -f ${PIDFILE} ] && ${RMCMD} ${PIDFILE}
+[ -f ${LOGFILE} ] && ${RMCMD} ${LOGFILE}
+
+exit 0

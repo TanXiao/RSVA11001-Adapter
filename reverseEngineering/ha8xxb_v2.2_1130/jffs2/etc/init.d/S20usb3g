@@ -1,0 +1,4 @@
+rmmod usb_storage
+insmod /module/extdrv/usb-storage.ko
+insmod /module/extdrv/usbserial.ko
+insmod /module/extdrv/option.ko

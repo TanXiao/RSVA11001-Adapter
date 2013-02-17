@@ -1,0 +1,12 @@
+#!/bin/sh
+DEFAULT_IP=192.168.0.100
+DEFAULT_MASK=255.255.255.0
+DEFAULT_GW=192.168.0.1
+BROADCAST="broadcast 192.255.255.255"
+RESOLV_CONF="/etc/resolv.conf"
+
+echo "dhcp failed. set $interface to default ip: $DEFAULT_IP"
+logger "dhcp failed. set $interface to default ip: $DEFAULT_IP"
+
+/sbin/ifconfig $interface $DEFAULT_IP $BROADCAST netmask $DEFAULT_MASK
+/sbin/route add default gw $DEFAULT_GW

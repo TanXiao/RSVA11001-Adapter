@@ -1,0 +1,1 @@
+search for 85 19 03 20 0C 00 00 00 B1 B0 1E E4 in the firmware. Copy it and everything following into a file. That is the JFFS2 filesystem image
