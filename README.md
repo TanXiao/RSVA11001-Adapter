@@ -81,3 +81,11 @@ video like the cameras can deliver. But it does work!
 I plan to improve things but presently I am just happy this works at all.
 Right now it is just a proof-of-concept. I plan to finish converting
 it into a useful piece of software soon.
+
+Credits
+----
+The HTTP Parser included in the software is http-parser available
+on GitHub. Many thanks
+to presenting a simple interface and a library free from a million
+dependencies. Also, many thanks to the whole CMake team for writing
+a build manager that doesn't suck.
