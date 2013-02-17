@@ -405,7 +405,7 @@ bool rsva11001_connection_open(rsva11001_connection * const this)
 	this->outputLength = (uint_fast32_t)requestSize;
 	this->bytesWritten = 0;
 	
-	static const unsigned int BASE_BUFFER_SIZE = 16383;
+	static const unsigned int BASE_BUFFER_SIZE = 16383*2;
 
 	if(not this->pongReceiveBuffer)
 	{
@@ -511,6 +511,7 @@ bool rsva11001_connection_process(rsva11001_connection * const this)
 		
 		if(sendResult == 0)
 		{
+		
 			return false;
 		}
 		
@@ -543,7 +544,7 @@ bool rsva11001_connection_process(rsva11001_connection * const this)
 	
 	while(readable)
 	{
-		static const unsigned int BUFFER_SIZE = 3;
+		static const unsigned int BUFFER_SIZE = 16383;
 		uint8_t buffer[BUFFER_SIZE];
 		
 		ssize_t recvResult = recv(this->sockfd,buffer,BUFFER_SIZE,0);
@@ -586,7 +587,21 @@ bool rsva11001_connection_process(rsva11001_connection * const this)
 
 bool rsva11001_connection_close(rsva11001_connection * const this)
 {
-	return false;
+	//If already closed, do nothing
+	if(this->sockfd == -1)
+	{
+		return true;
+	}
+	
+	if(0 != close(this->sockfd))
+	{
+		setLastError(this);
+		return false;
+	}
+	
+	this->sockfd = -1;
+	
+	return true;
 }
 
 int rsva11001_connection_getFd(rsva11001_connection const * const this)
