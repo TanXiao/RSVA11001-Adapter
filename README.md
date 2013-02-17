@@ -28,7 +28,8 @@ Once I got it up and running I realized its ActiveX primarily,
 which puts it firmly out of my reach since I am a linux user only. It 
 appears to try and do some User-Agent detection. If you browse to it from
 Firefox under Ubuntu it will give you a page that somehow gets the browser
-to open the RTSP connection on the DVR(this is absolutely not HTTP btw).
+to open the RTSP connection on the DVR(the actual images are not delivered
+over HTTP).
 
 I did some browsing on the included CD-ROM and concluded the following
 
@@ -57,8 +58,8 @@ no concept of access exclusion. Plus, if you live in a shared housing
 arrangement it'd make sense that more than one person might want to check
 up on the house at a time. 
 
-Another note is that opening the RTSP streamtake eons. It 
-seems to take 30 seconds. Then no matter what it just cuts off after a
+Another note is that opening the RTSP stream takes eons. It 
+seems to take  at least 30 seconds. Then no matter what it just cuts off after a
 few minutes. So I consider it useless.
 
 Solution
