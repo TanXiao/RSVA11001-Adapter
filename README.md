@@ -109,12 +109,7 @@ linux kernel image boot lines
     bootcmd=showlogo;bootm 0x80060000.bootdelay=1.baudrate=115200.ethaddr=00:16:55:00:00:00.ipaddr=192.168.0.100.serverip=192.168.0.1.gatewayip=192.168.0.1.netmask=255.255.255.0.bootfile="uImage"
 
 Apparently ttyAMA0 refers to a serial port on the SoC. Inside the box
-there is a 5 pin port labeled UART0. The serial port on the back of the unit
-labelled 'ALARM' is appears to have level converters, so it is probably 
-driven off a separate piece of hardware.
-
-There is pretty obviously a busybox binary on there. They didn't
-even both renaming it to 'VeryBusyBox' or something like that.
+there is a 5 pin port labeled UART0. 
 
 These lines are the password for the root user in /etc/shadow format
 
@@ -135,6 +130,40 @@ filesystems. The version of JFFS2 on my desktop is not fully compatible
 with the images in the firmware. However, JFFS2 is not explicitly versioned.
 I am downloading Debian Etch in the hopes that happens to be a similiar
 enough version to resolve the problems.
+
+Hardware
+---
+
+* Single board construction
+* FPGA-based 32-bit ARM SoC, little-endian
+* mPower mP2809 - 4 channel video + 5 channel audio
+* mPower mP2807 - 4 channel video
+* Realtek RTL8201CP
+* 16 megabytes of non-volatile flash memory
+* Hynix memory chips
+* A single relay which seems to be related to the RS-432 port
+* A 74HC140 (Hex-inverting schmitt trigger) that appears to be used for the ALARM port
+* A port labelled UART0
+* Two SATA ports
+* Some miscellaneous power filtering and regulation analog components.
+
+The mP2809 has a single DAC, I think that is how the device does 
+composite out. I have no idea what does the VGA. It must be in the SoC 
+as well.
+
+Interestingly, there does not appear to a dedicated SATA controller. It
+is most likely integrated into the SoC.
+
+Software Stack
+---
+The software stack is 
+
+* U-Boot Universal Loader
+* Linux > 2.6 with a modular kernel
+* A number of proprietary kernel modules for the special purpose hardware, for example one is labelled 74hc1605 which is a discrete flip-flop.
+* Proprietary kernel modules for hardware encoding of video, etc. There are some files referencing an FPGA, so this is a very general purpose core.
+* Busybox userspace
+* More stuff I have not analyzed yet
 
 Credits
 ----
