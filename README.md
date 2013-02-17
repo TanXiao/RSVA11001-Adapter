@@ -85,7 +85,12 @@ Newegg since it is an American company.
 
 After more browsing I realized I was just looking at a JFFS2 filesystem
 the hard way, so I extracted it from the firmware. It is under the 
-reverse engineering directory.
+reverse engineering directory. Based on the boot line 'mtdargs' value it
+looks like what I have extracted thus far is just a single one of many
+filesystems. The version of JFFS2 on my desktop is not fully compatible
+with the images in the firmware. However, JFFS2 is not explicitly versioned.
+I am downloading Debian Etch in the hopes that happens to be a similiar
+enough version to resolve the problems.
 
 Problem
 ----
