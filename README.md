@@ -49,6 +49,8 @@ best-practices experience, but a 'can do' attitude. It does work, but
 things like function calls are passed over in preference to complicated
 while loops.
 
+
+
 Problem
 ----
 After some more testing I also figured out that no matter what you do,
@@ -83,6 +85,10 @@ video like the cameras can deliver. But it does work!
 I plan to improve things but presently I am just happy this works at all.
 Right now it is just a proof-of-concept. I plan to finish converting
 it into a useful piece of software soon.
+
+One of the major issues I've noticed is that sometimes the box 
+timestamps the images retrived from the web interface. But not all
+ the time. 
 
 Firmware Analysis
 ---
