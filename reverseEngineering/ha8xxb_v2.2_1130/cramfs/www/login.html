@@ -1,0 +1,36 @@
+
+<html>
+	<head>
+		<TITLE>DVR WEB Client</TITLE>
+		<meta http-equiv="X-UA-Compatible" content="IE=7">
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+		<script language="JavaScript" type="text/JavaScript">
+<!--
+
+function init()
+{
+
+}
+
+function exit()
+{
+	//var url="exit.html?action=set";
+	//url+="&username="+username;
+	//window.open(url,"exit","top=5000,left=5000,height=1,width=0"); 
+	top.frames.resultFrame.location="exit.html?action=set";
+	return false;
+}
+
+//-->
+		</script>
+	</head>
+	<frameset rows="*,0,0" frameborder="NO" border="0" framespacing="0" onLoad="init()" onbeforeunload="exit();">
+	<frame id="mainFrame" name="mainFrame" frameborder="0"  src="play.html">
+	<frame   name="frmResource" id="frmResource">
+	<frame   name="resultFrame" id="resultFrame">
+	</frameset>
+	<noframes>
+		<body>please use internet explorer 7.0+
+		</body>
+	</noframes>
+</html>

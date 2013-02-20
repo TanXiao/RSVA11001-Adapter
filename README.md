@@ -17,7 +17,7 @@ interface I could just use some open source software like
 the web interface and get most of what I needed from that. 
 
 Initial Impressions
-------
+
 The HTTP server on the box is extremely glitchy. While Newegg claims it is linux
 powered, my guess is that all the code is actually running kernel mode
 or something equally bizarre.
@@ -66,7 +66,7 @@ seems to take  at least 30 seconds. Then no matter what it just cuts off after a
 few minutes. So I consider it useless.
 
 Solution
-----
+------
 So, the most obvious solution I could think of is to write a proxy
 that translates all requests to the box. I ended up writing some software
 to just continously round-robin the JPEG stream from the web interface.
@@ -90,7 +90,30 @@ One of the major issues I've noticed is that sometimes the box
 timestamps the images retrived from the web interface. But not all
  the time. 
 
-Firmware Analysis
+Firmware
+====
+
+Not content with an external software solution, I've also began examining the
+firmware to see if I can load my own stack on it.
+
+Format
+---
+As deduced so far, not exact
+
+    Magic 4 byte header - 73 56 EE 3A
+    Some strings indicating the version of the firmware
+    [uImage](http://git.denx.de/cgi-bin/gitweb.cgi?p=u-boot.git;a=blob;f=include/image.h) of a 'hilinux' kernel for ARM 
+    [gzip](http://www.gzip.org/zlib/rfc-gzip.html#header-trailer) of an unidentifiable blob, probably FPGA code
+    [JFFS2](http://sourceware.org/jffs2/jffs2-html/node3.html) root filesystem
+    [CRAMFS](http://en.wikipedia.org/wiki/Cramfs) filesystem of the applications
+    
+It seems that this device is implemented backwards in terms of the logical use of the filesystems.
+It would be logical to have a CRAMFS root filesystem, since that should only be readonly. With JFFS2
+mounted read-write for the application layer. However, they have done the opposite.
+
+I'm not sure if any of this is positioned at absolute offsets in the file or not.
+
+Investigation
 ---
 If you goto the [product page](http://www.rosewill.com/support/Support_Download.aspx?ids=26_133_412_1952)
 you can download what appears to be firmware for the device. There is no 
@@ -130,7 +153,8 @@ yet since I don't have a UART adapter.
 Based on these values, U Boot is configured to try and retrieve a file from a TFTP server and boot that.
 Unforunately when it boots, I do not see any requests for 192.168.0.1 coming from the box
 in a wireshark packet capture with my laptop. Perhaps it is the very
-strange ethernet address setting.
+strange ethernet address setting. Also, I think the physmap of the flash is not actually
+what is being loaded. My guess is that somehow this is dead firmware of some sort.
 
 These lines are the password for the root user in /etc/shadow format
 
@@ -144,14 +168,18 @@ It should be possible to force them to release the source code, or at least forc
 Newegg since it is an American company. It seems unlikely that [Huawei will cooperate](http://huaweihg612hacking.wordpress.com/2011/11/12/huawei-releases-source-code-for-hg612/).
 
 After more browsing I realized I was just looking at a JFFS2 filesystem
-the hard way, so I extracted it from the firmware. It is under the 
-reverse engineering directory. Based on the boot line 'mtdargs' value it
-looks like what I have extracted thus far is just the boot filesystem.
-The version of JFFS2 on my desktop is not fully compatible
-with the images in the firmware. I keep getting [messages like this](http://www.linux-mtd.infradead.org/faq/jffs2.html#L_magicnfound).
-Even more problematic, JFFS2 is not explicitly versioned.
+the hard way, so I extracted it from the firmware.
+
+Based on the 'bootargs' paramter above, I kept fumbling around thinking
+that that I needed to find six total separate JFFS2 images. However,
+[binwalk](http://code.google.com/p/binwalk/) helped me figure out what was
+really going on. It has a CRAMFS and a JFFS2 filesystem. Binwalk gets some
+false positives on some LZMA data in there.
+
 I have located the [original kernel and patches](http://lwn.net/Articles/266705/). But
-redhat no longer makes the patches available, but it looks like it is [available here](http://www.kernel.org/pub/linux/kernel/projects/rt/2.6.24/older/patch-2.6.24-rt1.bz2).
+redhat no longer makes the patches available, but it looks like it is 
+[available here](http://www.kernel.org/pub/linux/kernel/projects/rt/2.6.24/older/patch-2.6.24-rt1.bz2).
+Either way, I put the vanilla kernel and the patch in this repo.
 
 Interestingly, the files I have extracted include unstripped exectuable object files.
 The device has far more flash memory than needed, the firmware is zero padded
@@ -159,10 +187,37 @@ to the required size. My guess is whoever developed this device does not
 have much experience developing embedded devices, or does not care.
 
 I have located the SDK for the HiSilicon H3511, but it is linux
-2.6.14 based so it is not identical.
+2.6.14 based so it is not identical. It would be fantastic to locate the
+HI3515 or HI3520 SDK.
+
+
+Mounting the JFFS2 image
+---
+Special care must be taken to properly mount the JFFS2 image. A
+NAND device should be simulated for this purpose. This is an example 
+of how I did on it Ubuntu linux.
+
+   modprobe mtdblock
+   modprobe mtdchar
+   modprobe mtdram erase_size=128 total_size=32768
+   flash_eraseall /dev/mtd0
+   nandwrite /dev/mtd0 jffs2_img
+   mount -t jffs2 /dev/mtdblock0 /mnt
+
+Software Stack
+---
+The software stack is 
+
+* U-Boot Universal Loader
+* Linux 2.6.24-rt1
+* A number of proprietary kernel modules for the special purpose hardware, for example one object file is named 74hc1605 which is a discrete flip-flop.
+* Proprietary kernel modules for hardware encoding of video, etc. There are some files referencing an FPGA, so this is a very general purpose core.
+* Busybox userspace
+* More stuff I have not analyzed yet
+   
 
 Hardware
----
+========
 
 * Single board construction
 * FPGA-based 32-bit ARM SoC, little-endian
@@ -187,16 +242,6 @@ as well.
 Interestingly, there does not appear to a dedicated SATA controller. It
 is most likely integrated into the SoC.
 
-Software Stack
----
-The software stack is 
-
-* U-Boot Universal Loader
-* Linux 2.6.24-rt1
-* A number of proprietary kernel modules for the special purpose hardware, for example one object file is named 74hc1605 which is a discrete flip-flop.
-* Proprietary kernel modules for hardware encoding of video, etc. There are some files referencing an FPGA, so this is a very general purpose core.
-* Busybox userspace
-* More stuff I have not analyzed yet
 
 Credits
 ----

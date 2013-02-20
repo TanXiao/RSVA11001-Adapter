@@ -1,0 +1,90 @@
+<html>
+<head>
+<script type="text/javascript">
+var ch=0;
+var delay=6;
+var Mutex = 0;
+var user="";
+var pwd="";
+
+function load_jpeg()
+{
+	var user_e = document.getElementById("user");
+	var pwd_e = document.getElementById("pwd");
+	user = user_e.value;
+	pwd = pwd_e.value;
+	
+        if(delay < 1 || delay > 9 || delay == null)
+                delay = 1;
+      if(Mutex == 0)
+      {
+            Mutex = 1;
+            document.getElementById("jpeg").src = "/snapshot_m.html?" + "ch=" + ch + "&user=" + user + "&password=" + pwd + "&" + (new Date()).getTime() ;
+            setTimeout('load_jpeg()',delay*1000+500);
+            Mutex = 0;
+       }
+}
+
+setTimeout('load_jpeg()',5000);
+
+function changeSrc() {
+        var channels_obj = document.getElementById("channels");
+        ch = channels_obj.options[channels.selectedIndex].value;
+}
+
+function changeDelay() {
+	var Delay_obj = document.getElementById("Delays");
+        delay = Delay_obj.selectedIndex+1;
+}
+
+function changeSize() {
+        var size = document.getElementById("Size");
+        if(size.selectedIndex == 0){
+        	jpeg.width=320;
+        	jpeg.height=240;
+        }else if(size.selectedIndex == 1){
+        	jpeg.width=640;
+        	jpeg.height=480;
+        }
+}
+</script>
+</head>
+ 
+<body>
+CH :<select id="channels" onchange="changeSrc()">
+<option value ="0" selected>CH01</option>
+<option value ="1">CH02</option>
+<option value ="2">CH03</option>
+<option value ="3">CH04</option>
+<option value ="4">CH05</option>
+<option value ="5">CH06</option>
+<option value ="6">CH07</option>
+<option value ="7">CH08</option>
+</select>
+&nbsp;&nbsp; DELAY:<select id="Delays" onchange="changeDelay()">
+<option value ="1">1</option>
+<option value ="2">2</option>
+<option value ="3">3</option>
+<option value ="4">4</option>
+<option value ="5">5</option>
+<option value ="6" selected>6</option>
+<option value ="7">7</option>
+<option value ="8">8</option>
+<option value ="9">9</option>
+</select>
+&nbsp;&nbsp; SIZE:<select id="Size" onchange="changeSize()">
+<option value ="1" selected>Small</option>
+<option value ="2">Big</option>
+
+</select>
+<br />
+USER :<input type="text" name="user" id="user" size="8" maxlength="8" value="">
+&nbsp;&nbsp;
+PASSWORD :<input type="password" name="pwd" id="pwd" size="8" maxlength="8" value="">
+<br />
+<img width="320" height="240" id="jpeg" src="/snapshot_m.html?ch=0&user=&password=" onload=""/>
+</body>
+ 
+</html>
+
+

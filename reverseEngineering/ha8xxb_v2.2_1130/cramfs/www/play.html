@@ -1,0 +1,64 @@
+
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=7">
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>DVR WEB Client</title>
+<style type="text/css">
+<!--
+.style5 {color: #FFFFFF}
+.style7 {font-size: 12px}
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+-->
+</style>
+</head>
+<script language="javascript">
+var mediaport = 9000;
+var cmdport = 8000;
+function init()
+{   
+
+	//var url = "play.xml?";
+	//url +="action=get";
+	
+	//XMLData.src = url;
+	//return false;
+}
+
+
+function activx_init()
+{
+	var s1=	location.host.split(":");
+	
+	//var myDvr = document.getElementById('dvr');
+	//if(myDvr);
+	dvr.SetDeviceIPandPortCmdPort(s1[0],mediaport,cmdport);
+}
+
+function js_getport()
+{
+ 	mediaport = XMLData.selectSingleNode('Root/mediaport').text;
+ 	cmdport = XMLData.selectSingleNode('Root/cmdport').text;	
+	//alert(mediaport);
+	return false;
+}
+
+</script>
+<body topmargin="0" leftmargin="0" scrolling="no" onLoad="init();document.getElementById('dvr').focus();" bgcolor="#182835">
+<XML id="XMLData" src="play.xml?action=get" ondatasetchanged="js_getport();activx_init();"></XML>
+<center>
+<div align="center" style="height:50px; width:1000px;position:absolute; top:50px;"><a href="http://www.cctvdvr.com.tw/FuDvrOcx_SnP.rar" target='_blank'>If your browser does not support the ActiveX to download, please click here...</a></div>  
+<object id='dvr' name='dvr' codebase="FuDvrOcx.cab#version=1,0,3,30" style="width:1000px; height: 590px;" classid="clsid:7C77A951-8378-43B0-A86B-4CAB041CE5D8">
+        <param name="_Version" value="65536">
+        <param name="_ExtentX" value="19050">
+        <param name="_ExtentY" value="15240">
+        <param name="_StockProps" value="0">
+        <embed src="65536" width="1000px" height="590px" _version="65536" _extentx="19050" _extenty="15240" _stockprops="0"></embed>
+</object>
+</body>
+</html>

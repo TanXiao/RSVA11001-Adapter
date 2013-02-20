@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="gb2312"?>
+<Root>
+<!--login-->
+<xml_lang>Chinese</xml_lang>
+<xml_login>Unit ID</xml_login>
+<xml_password>Password</xml_password>
+<xml_submit>Login</xml_submit>
+
+<xml_user_error>ID error!</xml_user_error>
+<xml_password_error>password error!</xml_password_error>
+<xml_user_exist>ID exist!</xml_user_exist>
+
+<xml_channelNum>ChannelNum</xml_channelNum>
+
+<xml_vcon_volume_1>1--E_OCX_PARAM_ERROR</xml_vcon_volume_1>
+<xml_vcon_volume_2>2--In process of real time preview</xml_vcon_volume_2>
+<xml_vcon_volume_3>3--Without real time preview</xml_vcon_volume_3>
+<xml_vcon_volume_4>4--In process of save kinescope file</xml_vcon_volume_4>
+<xml_vcon_volume_5>5--Without save kinescope file</xml_vcon_volume_5>
+<xml_vcon_volume_6>6--Unknow error</xml_vcon_volume_6>
+<xml_vcon_volume_7>7--Can't find appointed file</xml_vcon_volume_7>
+<xml_vcon_volume_8>8--Local audio catch fail</xml_vcon_volume_8>
+<xml_vcon_volume_9>9--Catch parameter from equipment fail</xml_vcon_volume_9>
+<xml_vcon_volume_10>10--Set parameter from equipment fail</xml_vcon_volume_10>
+<xml_vcon_volume_11>11--Catch picture from equiment fail</xml_vcon_volume_11>
+<xml_vcon_volume_12>12--Send audio face to face request fail</xml_vcon_volume_12>
+
+
+
+<xml_kongjian>PlayerSize</xml_kongjian>
+
+<xml_JPEG>JPEG</xml_JPEG>
+
+<xml_realplay>RealPlay</xml_realplay>
+
+<xml_playback>PlayBack</xml_playback>
+
+<xml_open_1>Open!</xml_open_1>
+<xml_close_1>Close!</xml_close_1>
+<xml_set_error>Set Error!</xml_set_error>
+<xml_get_fail>Get value failed!</xml_get_fail>
+<xml_user_cut>This user has cut,The browser will close by itself,please login again!</xml_user_cut>
+
+
+</Root>
