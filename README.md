@@ -148,7 +148,7 @@ the hard way, so I extracted it from the firmware. It is under the
 reverse engineering directory. Based on the boot line 'mtdargs' value it
 looks like what I have extracted thus far is just the boot filesystem.
 The version of JFFS2 on my desktop is not fully compatible
-with the images in the firmware. I keep getting [messages like this](http://www.linux-mtd.infradead.org/faq/jffs2.html#L_magicnfound)
+with the images in the firmware. I keep getting [messages like this](http://www.linux-mtd.infradead.org/faq/jffs2.html#L_magicnfound).
 Even more problematic, JFFS2 is not explicitly versioned.
 I have located the [original kernel and patches](http://lwn.net/Articles/266705/). But
 redhat no longer makes the patches available, but it looks like it is [available here](http://www.kernel.org/pub/linux/kernel/projects/rt/2.6.24/older/patch-2.6.24-rt1.bz2).
@@ -158,7 +158,7 @@ The device has far more flash memory than needed, the firmware is zero padded
 to the required size. My guess is whoever developed this device does not
 have much experience developing embedded devices, or does not care.
 
-I have located the firmware for the HiSilicon H3511, but it is linux
+I have located the SDK for the HiSilicon H3511, but it is linux
 2.6.14 based so it is not identical.
 
 Hardware
