@@ -41,22 +41,24 @@ for start in magicLocations:
 	
 	nodeType = (~JFFS2_COMPAT_MASK) & nodeType
 	
-	print( hex(start) + ': type=' + hex(  nodeType) + ', length=' + str(nodeLength) + ', crc=' + str(nodeCrc))
+	#print( hex(start) + ': type=' + hex(  nodeType) + ', length=' + str(nodeLength) + ', crc=' + str(nodeCrc))
 	
 	if(nodeType == JFFS2_NODETYPE_INODE):
 		values = struct.unpack(inodefmt,data[start:start+68])
 		values = list(values)
 		keys = inodekeys
+		print('inode @ ' + hex(start))
 	elif nodeType == JFFS2_NODETYPE_DIRENT:
 		values= struct.unpack(direntfmt,data[start:start+40])
 		values = list(values)
 		keys = direntkeys
+		print('dirent @ ' + hex(start))
 	else:
 		continue
 		
 	obj= dict(zip(keys,values))
 		
-	print(obj)
+	#print(obj)
 	
 	
 	

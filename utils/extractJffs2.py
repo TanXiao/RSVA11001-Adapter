@@ -15,6 +15,8 @@ if magicOffset == -1:
 
 print(len(data))
 
+open('fs.jffs2','w').write(data[magicOffset:])
+
 partitions = '384K(boot),1280K(kernel),5M(rootfs),9M(app),128K(para),128K(init_logo)'
 
 partitions = partitions.split(',')

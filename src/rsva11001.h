@@ -30,4 +30,6 @@ bool rsva11001_connection_getLatestImage(rsva11001_connection * const this,uint8
 
 const char * rsva11001_connection_getLastError(rsva11001_connection const * const this);
 
+unsigned rsva11001_connection_getChannelNumber(rsva11001_connection const * const this);
+
 #endif
