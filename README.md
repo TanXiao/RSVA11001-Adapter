@@ -4,9 +4,11 @@ RSVA11001 Adapter
 The [RSVA11001](http://www.newegg.com/Product/Product.aspx?Item=N82E16881147011) is a home surveillance DVR Kit sold by Newegg. Rosewill
 is the 'house brand' of Newegg. The DVR box is identical to the one
 sold with the RSVA12001, the difference is supposedly in the cameras.
-The DVR is most likely not made explicitly for Newegg. I have not had
-a reason to open it up, but if someone could contribute some information
-about who the OEM is I would gladly include it.
+The DVR is most likely not made explicitly for Newegg. It is a repackaged 
+[HiSilicon 3515](http://www.secuv.com/Hi3515-H.264-Encoding-and-Decoding-Processor)
+or [HiSilicon 3520](http://www.secuv.com/Hi3520-H.264-Codec). The only difference
+is the number of channels as far as I can tell. The Huawei 3515 is probably
+the same product as well.
 
 I purchased this kit because it was reasonably priced and seemed to 
 be packed full of features. I assumed that since it advertised a web
@@ -48,8 +50,6 @@ bytes then closes the connection.
 best-practices experience, but a 'can do' attitude. It does work, but 
 things like function calls are passed over in preference to complicated
 while loops.
-
-
 
 Problem
 ----
@@ -112,10 +112,24 @@ linux kernel image boot lines
 
     console=ttyAMA0,115200 root=1f02 rootfstype=jffs2 mtdparts=physmap-flash.0:384K(boot),1280K(kernel),5M(rootfs),9M(app),128K(para),128K(init_logo) busclk=220000000
     bootargs=console=ttyAMA0,115200 root=1f02 rootfstype=jffs2 mtdparts=physmap-flash.0:384K(boot),1280K(kernel),5M(rootfs),9M(app),128K(para),128K(init_logo) busclk=220000000
-    bootcmd=showlogo;bootm 0x80060000.bootdelay=1.baudrate=115200.ethaddr=00:16:55:00:00:00.ipaddr=192.168.0.100.serverip=192.168.0.1.gatewayip=192.168.0.1.netmask=255.255.255.0.bootfile="uImage"
+    bootcmd=showlogo;
+    bootm 0x80060000
+    bootdelay=1
+    baudrate=115200
+    ethaddr=00:16:55:00:00:00
+    ipaddr=192.168.0.100
+    serverip=192.168.0.1
+    gatewayip=192.168.0.1
+    netmask=255.255.255.0
+    bootfile="uImage"
 
 Apparently ttyAMA0 refers to a serial port on the SoC. Inside the box
-there is a 5 pin port labeled UART0. 
+there is a 5 pin port labeled UART0. I have not had a chance to connect to it
+yet since I don't have a UART adapter.
+
+When it boots, I do not see any requests for 192.168.0.1 coming from the box
+in a wireshark packet capture with my laptop. Perhaps it is the very
+strange ethernet address setting
 
 These lines are the password for the root user in /etc/shadow format
 
@@ -126,16 +140,24 @@ If someone wants to decrypt those, it would be of a great aid. A rainbow
 table can probably be used.
 
 It should be possible to force them to release the source code, or at least force
-Newegg since it is an American company.
+Newegg since it is an American company. It seems unlikely that [Huawei will cooperate](http://huaweihg612hacking.wordpress.com/2011/11/12/huawei-releases-source-code-for-hg612/).
 
 After more browsing I realized I was just looking at a JFFS2 filesystem
 the hard way, so I extracted it from the firmware. It is under the 
 reverse engineering directory. Based on the boot line 'mtdargs' value it
-looks like what I have extracted thus far is just a single one of many
-filesystems. The version of JFFS2 on my desktop is not fully compatible
+looks like what I have extracted thus far is just the boot filesystem.
+The version of JFFS2 on my desktop is not fully compatible
 with the images in the firmware. However, JFFS2 is not explicitly versioned.
-I am downloading Debian Etch in the hopes that happens to be a similiar
-enough version to resolve the problems.
+I have located the [original kernel and patches](http://lwn.net/Articles/266705/). But
+redhat no longer makes the patches available, but it looks like it is [available here](http://www.kernel.org/pub/linux/kernel/projects/rt/2.6.24/older/patch-2.6.24-rt1.bz2).
+
+Interestingly, the files I have extracted include unstripped exectuable object files.
+The device has far more flash memory than needed, the firmware is zero padded
+to the required size. My guess is whoever developed this device does not
+have much experience developing embedded devices, or does not care.
+
+I have located the firmware for the HiSilicon H3511, but it is linux
+2.6.14 based so it is not identical.
 
 Hardware
 ---
@@ -144,7 +166,7 @@ Hardware
 * FPGA-based 32-bit ARM SoC, little-endian
 * mPower mP2809 - 4 channel video + 5 channel audio
 * mPower mP2807 - 4 channel video
-* Realtek RTL8201CP
+* Realtek RTL8201CP - 10/100 Mbps Ethernet
 * 16 megabytes of non-volatile flash memory
 * Hynix memory chips
 * A single relay which seems to be related to the RS-432 port
@@ -154,7 +176,10 @@ Hardware
 * Some miscellaneous power filtering and regulation analog components.
 
 The mP2809 has a single DAC, I think that is how the device does 
-composite out. I have no idea what does the VGA. It must be in the SoC 
+composite out. It's possible its in the SoC. Composite is not a particularly
+complex signal.
+
+I have no idea what does the VGA. It must be in the SoC 
 as well.
 
 Interestingly, there does not appear to a dedicated SATA controller. It
@@ -165,15 +190,15 @@ Software Stack
 The software stack is 
 
 * U-Boot Universal Loader
-* Linux 2.6.24 with a modular kernel
-* A number of proprietary kernel modules for the special purpose hardware, for example one is labelled 74hc1605 which is a discrete flip-flop.
+* Linux 2.6.24-rt1
+* A number of proprietary kernel modules for the special purpose hardware, for example one object file is named 74hc1605 which is a discrete flip-flop.
 * Proprietary kernel modules for hardware encoding of video, etc. There are some files referencing an FPGA, so this is a very general purpose core.
 * Busybox userspace
 * More stuff I have not analyzed yet
 
 Credits
 ----
-The HTTP Parser included in the software is http-parser available
+The HTTP Parser included in the software is joyent/http-parser available
 on GitHub. Many thanks
 to presenting a simple interface and a library free from a million
 dependencies. Also, many thanks to the whole CMake team for writing
