@@ -17,7 +17,7 @@ interface I could just use some open source software like
 the web interface and get most of what I needed from that. 
 
 Initial Impressions
-
+-------
 The HTTP server on the box is extremely glitchy. While Newegg claims it is linux
 powered, my guess is that all the code is actually running kernel mode
 or something equally bizarre.
@@ -103,7 +103,7 @@ As deduced so far, not exact
     Magic 4 byte header - 73 56 EE 3A
     Some strings indicating the version of the firmware
     [uImage](http://git.denx.de/cgi-bin/gitweb.cgi?p=u-boot.git;a=blob;f=include/image.h) of a 'hilinux' kernel for ARM 
-    [gzip](http://www.gzip.org/zlib/rfc-gzip.html#header-trailer) of an unidentifiable blob, probably FPGA code
+    [gzip](http://www.gzip.org/zlib/rfc-gzip.html#header-trailer) of an mystery blob, see blow
     [JFFS2](http://sourceware.org/jffs2/jffs2-html/node3.html) root filesystem
     [CRAMFS](http://en.wikipedia.org/wiki/Cramfs) filesystem of the applications
     
@@ -147,14 +147,12 @@ linux kernel image boot lines
     bootfile="uImage"
 
 Apparently ttyAMA0 refers to a serial port on the SoC. Inside the box
-there is a 5 pin port labeled UART0. I have not had a chance to connect to it
-yet since I don't have a UART adapter.
-
-Based on these values, U Boot is configured to try and retrieve a file from a TFTP server and boot that.
+there is a 5 pin port labeled UART0. Based on these values, U Boot is configured to try and retrieve a file from a TFTP server and boot that.
 Unforunately when it boots, I do not see any requests for 192.168.0.1 coming from the box
 in a wireshark packet capture with my laptop. Perhaps it is the very
 strange ethernet address setting. Also, I think the physmap of the flash is not actually
-what is being loaded. My guess is that somehow this is dead firmware of some sort.
+what is being loaded.  All that about a UART connection and TFTP looked promising but has not 
+been exploited yet. Perhaps this is somehow an unused configuration.
 
 These lines are the password for the root user in /etc/shadow format
 
@@ -164,9 +162,6 @@ These lines are the password for the root user in /etc/shadow format
 If someone wants to decrypt those, it would be of a great aid. A rainbow
 table can probably be used.
 
-It should be possible to force them to release the source code, or at least force
-Newegg since it is an American company. It seems unlikely that [Huawei will cooperate](http://huaweihg612hacking.wordpress.com/2011/11/12/huawei-releases-source-code-for-hg612/).
-
 After more browsing I realized I was just looking at a JFFS2 filesystem
 the hard way, so I extracted it from the firmware.
 
@@ -174,7 +169,8 @@ Based on the 'bootargs' paramter above, I kept fumbling around thinking
 that that I needed to find six total separate JFFS2 images. However,
 [binwalk](http://code.google.com/p/binwalk/) helped me figure out what was
 really going on. It has a CRAMFS and a JFFS2 filesystem. Binwalk gets some
-false positives on some LZMA data in there.
+false positives on some LZMA data in there but is otherwise a great help.
+Both filesystems are extracted and are under this repo now.
 
 I have located the [original kernel and patches](http://lwn.net/Articles/266705/). But
 redhat no longer makes the patches available, but it looks like it is 
@@ -183,8 +179,10 @@ Either way, I put the vanilla kernel and the patch in this repo.
 
 Interestingly, the files I have extracted include unstripped exectuable object files.
 The device has far more flash memory than needed, the firmware is zero padded
-to the required size. My guess is whoever developed this device does not
-have much experience developing embedded devices, or does not care.
+to the required size. It appears that files that are stripped are the final
+manufacturers exectuables (just branding really) and the unstripped files
+are the SDK for the device provided by the OEM. So this is probably 
+a the same exact release used for development.
 
 I have located the SDK for the HiSilicon H3511, but it is linux
 2.6.14 based so it is not identical. It would be fantastic to locate the
@@ -203,6 +201,19 @@ of how I did on it Ubuntu linux.
    flash_eraseall /dev/mtd0
    nandwrite /dev/mtd0 jffs2_img
    mount -t jffs2 /dev/mtdblock0 /mnt
+   
+Mystery Blob
+---
+The mystery blob from the firmware is a gzip compressed item. Once
+decompressed, the format is not obvious. Binwalk finds at least two ELF32
+objects in it. However, running 'strings' find goodies such as 
+
+   Linux version 2.6.24-rt1-hi3515v100 (bruce@ubuntu) (gcc version 3.4.3 (release) (CodeSourcery ARM Q3cvs 2004)) #30 Thu Nov 22 19:29:06 CST 2012
+   
+CodeSourcery is a Mentor Graphics tool chain for packaging embedded linux kernels.
+Based on all the other ASCII values in this blob, this appears to be 
+a completely seperate copy of a compiled kernel. I have to wonder, was this
+gzip'd blob included on accident?
 
 Software Stack
 ---
@@ -214,6 +225,12 @@ The software stack is
 * Proprietary kernel modules for hardware encoding of video, etc. There are some files referencing an FPGA, so this is a very general purpose core.
 * Busybox userspace
 * More stuff I have not analyzed yet
+
+GPL Compliance
+---
+It should be possible to force them to release the source code, or at least force
+Newegg since it is an American company. It seems unlikely that [Huawei will cooperate](http://huaweihg612hacking.wordpress.com/2011/11/12/huawei-releases-source-code-for-hg612/).
+I have contacted Rosewill but have not received a reply.
    
 
 Hardware
