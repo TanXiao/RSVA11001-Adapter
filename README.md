@@ -127,9 +127,10 @@ Apparently ttyAMA0 refers to a serial port on the SoC. Inside the box
 there is a 5 pin port labeled UART0. I have not had a chance to connect to it
 yet since I don't have a UART adapter.
 
-When it boots, I do not see any requests for 192.168.0.1 coming from the box
+Based on these values, U Boot is configured to try and retrieve a file from a TFTP server and boot that.
+Unforunately when it boots, I do not see any requests for 192.168.0.1 coming from the box
 in a wireshark packet capture with my laptop. Perhaps it is the very
-strange ethernet address setting
+strange ethernet address setting.
 
 These lines are the password for the root user in /etc/shadow format
 
