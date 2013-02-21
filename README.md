@@ -148,9 +148,9 @@ linux kernel image boot lines
 
 Apparently ttyAMA0 refers to a serial port on the SoC. Inside the box
 there is a 5 pin port labeled UART0. Based on these values, U Boot is configured to try and retrieve a file from a TFTP server and boot that.
-Unforunately when it boots, I do not see any requests for 192.168.0.1 coming from the box
-in a wireshark packet capture with my laptop. Perhaps it is the very
-strange ethernet address setting. Also, I think the physmap of the flash is not actually
+Unforunately when it boots, I did not see any requests for 192.168.0.1 coming from the box
+in a wireshark packet capture with my laptop. It will use an ip of 192.168.0.100 in an absence of a DHCP server however.
+ Also, I think the physmap of the flash is not actually
 what is being loaded.  All that about a UART connection and TFTP looked promising but has not 
 been exploited yet. Perhaps this is somehow an unused configuration.
 
