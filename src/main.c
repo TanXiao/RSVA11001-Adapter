@@ -17,9 +17,13 @@
 #include "stdlib.h"
 #include "string.h"
 #include "sandgrouse/server.h"
+#include "sandgrouse/connection.h"
+#include "sandgrouse/queryStringParser.h"
+#include "sandgrouse/util.h"
 
 enum{
 	MAX_NUM_CAMERAS=16,
+	SCGI_ID = 2,
 	SIGFD_ID = 1,
 	CAMERA_ID = 0
 };
@@ -27,10 +31,17 @@ enum{
 
 struct
 {
+	sg_server * server;
 	rsva11001_connection * conns[MAX_NUM_CAMERAS];
 	rsva11001_connection * activeCamera;
 	unsigned int cameraIterator;
 	unsigned int numCameras;
+	
+	struct
+	{
+		uint8_t * 	data;
+		uint_fast32_t size;
+	}lastImage[MAX_NUM_CAMERAS];
 	
 	char username[64];
 	char password[64];
@@ -212,8 +223,9 @@ void writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
 	}
 	
 	//mmap the file
-	uint8_t const * const dst = mmap(NULL,imageSize,PROT_READ| PROT_WRITE,MAP_SHARED,fd,0);
+	uint8_t * const dst = mmap(NULL,imageSize,PROT_READ| PROT_WRITE,MAP_SHARED,fd,0);
 	
+	//Check for mmap failure
 	if((void*)dst == MAP_FAILED)
 	{
 		terminateOnErrno(mmap);	
@@ -225,12 +237,23 @@ void writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
 		terminateOnErrno(close);
 	}
 	
+	//Copy the image into the file
 	memcpy((char*)dst,(char*)buffer,imageSize);
 	
-	if(0!=munmap((void*)dst,imageSize))
+	//Store the last image
+	
+	//Unmap the existing image if any
+	if(globals.lastImage[globals.cameraIterator].data != NULL)
 	{
-		terminateOnErrno(munmap);
+		if(0!=munmap((void*)globals.lastImage[globals.cameraIterator].data,globals.lastImage[globals.cameraIterator].size))
+		{
+			terminateOnErrno(munmap);
+		}
 	}
+	
+	globals.lastImage[globals.cameraIterator].data = dst;
+	globals.lastImage[globals.cameraIterator].size = imageSize;
+	
 }
 
 void processActiveCamera(void)
@@ -263,6 +286,86 @@ void processActiveCamera(void)
 		
 		globals.activeCamera = NULL;
 	}
+}
+
+bool handleNewRequest(sg_connection * conn)
+{
+	const char * const method = sg_connection_getHeader(conn,"REQUEST_METHOD");
+	
+	if(method == NULL or 0!= strcmp(method,"GET"))
+	{
+		sg_send404(conn);
+		return true;
+	}
+	
+	const char * const pathInfo = sg_connection_getHeader(conn, "PATH_INFO");
+	
+	if(pathInfo == NULL)
+	{
+		sg_send404(conn);
+		return true;
+	}
+	
+	if(0!=strcmp("/camera.jpg",pathInfo))
+	{
+		sg_send404(conn);
+		return true;
+	}
+	
+	/**
+	const char * const queryString = sg_connection_getheader(conn,"QUERY_STRING");
+	
+	if(queryString == NULL)
+	{
+		sg_send404(conn);
+		return true;
+	}
+	
+	sg_queryStringParser parser;
+	
+	if ( not sg_queryStringParser_init(&parser,queryString) )
+	{
+		sg_send404(conn);
+		return true;
+	}
+	**/
+	
+	uint8_t const * const imageData = globals.lastImage[0].data;
+	uint_fast32_t  const imageSize = globals.lastImage[0].size;
+	
+	if (imageData == NULL)
+	{
+		sg_send404(conn);
+		return true;
+	}
+	
+	static const unsigned int numHeaders =3;
+	
+	uint8_t const * headerKeys[numHeaders];
+	headerKeys[0] = (uint8_t const *)"Content-Type";
+	headerKeys[1] = (uint8_t const *)"Status";
+	headerKeys[2] = (uint8_t const *)"Content-Length";
+	
+	uint8_t const * headerValues[numHeaders];
+	headerValues[0] = (uint8_t const *)"image/jpeg";
+	headerKeys[1] =(uint8_t const *)"200 OK";
+	
+	char buffer[32];
+	
+	if(sizeof(buffer) == snprintf(buffer,sizeof(buffer),"%" PRIuFAST32 ,imageSize) )
+	{
+		sg_send404(conn);
+		return true;
+	}
+	
+	headerKeys[2] = (uint8_t const *)buffer;
+	
+	if ( not sg_connection_writeResponse(conn,headerKeys,headerValues,numHeaders,imageData,imageSize) )
+	{
+		return false;
+	}
+	
+	return true;
 }
 
 void reactor(void){
@@ -316,6 +419,22 @@ void reactor(void){
 						shutdown = true;
 						break;
 					}
+					
+					case SCGI_ID:
+					{
+						if ( not sg_server_process(globals.server) )
+						{
+							char const * errmsg = sg_server_getLastError(globals.server);
+							terminate(errmsg);
+						}
+						//Check for new request						
+						sg_connection * conn;
+						while( NULL != (conn = sg_server_getNextConnection(globals.server)))
+						{
+							handleNewRequest(conn);
+						}
+					}
+					break;
 					default:
 						terminate("Unknown ID returned in epoll event");
 				}
@@ -348,6 +467,50 @@ void cleanupCameraConnections(void)
 	}
 }
 
+bool setupScgiServer(void)
+{
+	globals.server = sg_server_malloc();
+	
+	if(not globals.server)
+	{
+		return false;
+	}
+	
+	sg_server_setSocketPath(globals.server,"/tmp/rsva11001adapter.socket");
+	
+	if( not sg_server_init(globals.server) )
+	{
+		return false;
+	}
+	
+	const int fd = sg_server_getFileDescriptor(globals.server);
+	if(fd < 0)
+	{
+		return false;
+	}
+	
+	struct epoll_event ev;
+	bzero(&ev,sizeof(ev));
+	
+	ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
+	ev.data.u32 = SCGI_ID;
+	
+	if(0!=epoll_ctl(globals.epollFd,EPOLL_CTL_ADD,fd,&ev))
+	{
+		terminateOnErrno("epoll_ctl");
+		return false;
+	}
+	
+	return true;
+}
+
+void closeScgiServer(void)
+{
+	sg_server_destroy(globals.server);
+	free(globals.server);
+	globals.server = NULL;
+}
+
 int main(int argc, char * argv[]){
 
 	bzero(&globals,sizeof(globals));
@@ -358,20 +521,21 @@ int main(int argc, char * argv[]){
 	
 	setupCameraConnections();
 
-	sg_server * const server = sg_server_malloc();
-	
-	if(not server)
+	if( not setupScgiServer())
 	{
-		return 1;
+		goto cleanUpFds;
 	}
 
 	reactor();
 
+	closeScgiServer();
+	
+	cleanUpFds:
 	close(globals.signalFd);
 	close(globals.epollFd);
 	
 	cleanupCameraConnections();
-
-
+	
+	
 	return 0;
 }
