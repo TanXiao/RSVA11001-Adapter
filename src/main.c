@@ -20,6 +20,7 @@
 #include "sandgrouse/connection.h"
 #include "sandgrouse/queryStringParser.h"
 #include "sandgrouse/util.h"
+#include "limits.h"
 
 enum{
 	MAX_NUM_CAMERAS=16,
@@ -312,8 +313,8 @@ bool handleNewRequest(sg_connection * conn)
 		return true;
 	}
 	
-	/**
-	const char * const queryString = sg_connection_getheader(conn,"QUERY_STRING");
+
+	const char * const queryString = sg_connection_getHeader(conn,"QUERY_STRING");
 	
 	if(queryString == NULL)
 	{
@@ -328,7 +329,57 @@ bool handleNewRequest(sg_connection * conn)
 		sg_send404(conn);
 		return true;
 	}
-	**/
+	
+	unsigned int src;
+	
+	uint8_t buffer[256];
+	uint_fast32_t length = sizeof(buffer);
+	
+	
+	if( not sg_queryStringParser_findFirst(&parser,"source",buffer,&length))
+	{
+		sg_send404(conn);
+		return true;
+	}
+	
+	if ( length == 0)
+	{
+		src = 0;
+	}
+	else
+	{
+		char * endptr;
+		errno = 0;
+		const unsigned long v = strtoul((const char *)buffer,&endptr,10);
+		
+		if(v == ULONG_MAX and errno!=0)
+		{
+			sg_send404(conn);
+			return true;
+		}
+		
+		if(*endptr!='\0')
+		{
+			sg_send404(conn);
+			return true;
+		}
+		
+		if(v > UINT_MAX)
+		{
+			sg_send404(conn);
+			return true;
+		}
+		
+		if( v > globals.numCameras )
+		{
+			sg_send404(conn);
+			return true;
+		}
+		
+		src = (unsigned int)v;
+	}
+	
+	assert(src < globals.numCameras);
 	
 	uint8_t const * const imageData = globals.lastImage[0].data;
 	uint_fast32_t  const imageSize = globals.lastImage[0].size;
@@ -350,7 +401,7 @@ bool handleNewRequest(sg_connection * conn)
 	headerValues[0] = (uint8_t const *)"image/jpeg";
 	headerKeys[1] =(uint8_t const *)"200 OK";
 	
-	char buffer[32];
+	
 	
 	if(sizeof(buffer) == snprintf(buffer,sizeof(buffer),"%" PRIuFAST32 ,imageSize) )
 	{
@@ -388,6 +439,14 @@ void reactor(void){
 			
 			if(numEvents == -1)
 			{
+				const int error = errno;
+				
+				//This just seems to happen. It can be safely ignored
+				if (errno == EINTR)
+				{
+					continue;
+				}
+				
 				terminateOnErrno(epoll_wait);
 			}
 			
