@@ -433,6 +433,12 @@ void reactor(void){
 						{
 							handleNewRequest(conn);
 						}
+						if ( not sg_server_process(globals.server) )
+						{
+							char const * errmsg = sg_server_getLastError(globals.server);
+							terminate(errmsg);
+						}
+
 					}
 					break;
 					default:
@@ -492,7 +498,7 @@ bool setupScgiServer(void)
 	struct epoll_event ev;
 	bzero(&ev,sizeof(ev));
 	
-	ev.events = EPOLLIN | EPOLLOUT ;
+	ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
 	ev.data.u32 = SCGI_ID;
 	
 	if(0!=epoll_ctl(globals.epollFd,EPOLL_CTL_ADD,fd,&ev))
