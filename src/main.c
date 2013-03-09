@@ -16,6 +16,7 @@
 #include <sys/mman.h>
 #include "stdlib.h"
 #include "string.h"
+#include "sandgrouse/server.h"
 
 enum{
 	MAX_NUM_CAMERAS=16,
@@ -357,6 +358,12 @@ int main(int argc, char * argv[]){
 	
 	setupCameraConnections();
 
+	sg_server * const server = sg_server_malloc();
+	
+	if(not server)
+	{
+		return 1;
+	}
 
 	reactor();
 
