@@ -381,8 +381,8 @@ bool handleNewRequest(sg_connection * conn)
 	
 	assert(src < globals.numCameras);
 	
-	uint8_t const * const imageData = globals.lastImage[0].data;
-	uint_fast32_t  const imageSize = globals.lastImage[0].size;
+	uint8_t const * const imageData = globals.lastImage[src].data;
+	uint_fast32_t  const imageSize = globals.lastImage[src].size;
 	
 	if (imageData == NULL)
 	{
