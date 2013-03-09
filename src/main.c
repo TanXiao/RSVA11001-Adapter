@@ -492,7 +492,7 @@ bool setupScgiServer(void)
 	struct epoll_event ev;
 	bzero(&ev,sizeof(ev));
 	
-	ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
+	ev.events = EPOLLIN | EPOLLOUT ;
 	ev.data.u32 = SCGI_ID;
 	
 	if(0!=epoll_ctl(globals.epollFd,EPOLL_CTL_ADD,fd,&ev))
