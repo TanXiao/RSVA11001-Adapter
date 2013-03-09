@@ -399,7 +399,7 @@ bool handleNewRequest(sg_connection * conn)
 	
 	uint8_t const * headerValues[numHeaders];
 	headerValues[0] = (uint8_t const *)"image/jpeg";
-	headerKeys[1] =(uint8_t const *)"200 OK";
+	headerValues[1] =(uint8_t const *)"200 OK";
 	
 	
 	
@@ -409,7 +409,7 @@ bool handleNewRequest(sg_connection * conn)
 		return true;
 	}
 	
-	headerKeys[2] = (uint8_t const *)buffer;
+	headerValues[2] = (uint8_t const *)buffer;
 	
 	if ( not sg_connection_writeResponse(conn,headerKeys,headerValues,numHeaders,imageData,imageSize) )
 	{
