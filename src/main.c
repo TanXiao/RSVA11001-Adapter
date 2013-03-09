@@ -370,7 +370,7 @@ bool handleNewRequest(sg_connection * conn)
 			return true;
 		}
 		
-		if( v > globals.numCameras )
+		if( v >= globals.numCameras )
 		{
 			sg_send404(conn);
 			return true;
