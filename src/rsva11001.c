@@ -658,6 +658,13 @@ bool rsva11001_connection_process(rsva11001_connection * const this)
 }
 
 
+unsigned rsva11001_connection_getChannelNumber(rsva11001_connection const * const this)
+{
+	assert(this!=NULL);
+	
+	return this->channel;
+}
+
 bool rsva11001_connection_close(rsva11001_connection * const this)
 {
 	//If already closed, do nothing

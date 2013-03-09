@@ -162,8 +162,25 @@ These lines are the password for the root user in /etc/shadow format
 If someone wants to decrypt those, it would be of a great aid. A rainbow
 table can probably be used.
 
+It should be possible to force them to release the source code, or at least force
+Newegg since it is an American company. It seems unlikely that [Huawei will cooperate](http://huaweihg612hacking.wordpress.com/2011/11/12/huawei-releases-source-code-for-hg612/).
+
 After more browsing I realized I was just looking at a JFFS2 filesystem
-the hard way, so I extracted it from the firmware.
+the hard way, so I extracted it from the firmware. It is under the 
+reverse engineering directory. Based on the boot line 'mtdargs' value it
+looks like what I have extracted thus far is just the boot filesystem.
+The version of JFFS2 on my desktop is not fully compatible
+with the images in the firmware. However, JFFS2 is not explicitly versioned.
+I have located the [original kernel and patches](http://lwn.net/Articles/266705/). But
+redhat no longer makes the patches available, but it looks like it is [available here](http://www.kernel.org/pub/linux/kernel/projects/rt/2.6.24/older/patch-2.6.24-rt1.bz2).
+
+Interestingly, the files I have extracted include unstripped exectuable object files.
+The device has far more flash memory than needed, the firmware is zero padded
+to the required size. My guess is whoever developed this device does not
+have much experience developing embedded devices, or does not care.
+
+I have located the firmware for the HiSilicon H3511, but it is linux
+2.6.14 based so it is not identical.
 
 Based on the 'bootargs' paramter above, I kept fumbling around thinking
 that that I needed to find six total separate JFFS2 images. However,
@@ -259,6 +276,17 @@ as well.
 Interestingly, there does not appear to a dedicated SATA controller. It
 is most likely integrated into the SoC.
 
+=======
+Software Stack
+---
+The software stack is 
+
+* U-Boot Universal Loader
+* Linux 2.6.24-rt1
+* A number of proprietary kernel modules for the special purpose hardware, for example one object file is named 74hc1605 which is a discrete flip-flop.
+* Proprietary kernel modules for hardware encoding of video, etc. There are some files referencing an FPGA, so this is a very general purpose core.
+* Busybox userspace
+* More stuff I have not analyzed yet
 
 Credits
 ----
