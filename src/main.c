@@ -362,6 +362,12 @@ void writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
 	}
 
 	globals.pendingRequests[globals.cameraIterator].numPending  = 0;
+	
+	if ( not sg_server_process(globals.server) )
+	{
+		char const * errmsg = sg_server_getLastError(globals.server);
+		terminate(errmsg);
+	}
 }
 
 void processActiveCamera(void)
