@@ -150,7 +150,6 @@ void setupCameraConnections(void)
 void readConfiguration(int argc, char * argv[])
 {
 
-	
 	const char * const  RSVA11001_HOST = getenv("RSVA11001_HOST");
 	const char * const  RSVA11001_PASSWORD = getenv("RSVA11001_PASSWORD");
 	const char * const  RSVA11001_USERNAME = getenv("RSVA11001_USERNAME");
@@ -491,6 +490,7 @@ bool handleNewRequest(sg_connection * conn)
 	
 	assert(src < globals.numCameras);
 	
+	length = sizeof(buffer);
 	if( not sg_queryStringParser_findFirst(&parser,"wait",buffer,&length))
 	{
 		sg_send404(conn);
