@@ -138,7 +138,7 @@ void setupCameraConnections(void)
 			terminate("Failed to malloc memory for connection object");
 		}
 		
-		if( not rsva11001_connection_configure(conn,"192.168.12.168","1111","1111",i+1))
+		if( not rsva11001_connection_configure(conn,globals.host,globals.username,globals.password,i+1))
 		{
 			terminate("Bad camera connection configuration");
 		}
@@ -401,7 +401,6 @@ void processActiveCamera(void)
 		globals.activeCamera = NULL;
 	}
 }
-
 
 
 bool handleNewRequest(sg_connection * conn)
