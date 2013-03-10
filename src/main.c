@@ -16,23 +16,12 @@
 #include <sys/mman.h>
 #include "stdlib.h"
 #include "string.h"
-#include "sys/socket.h"
-#include "sys/types.h"
-#include "arpa/inet.h"
 
-#include "request.h"
 enum{
 	MAX_NUM_CAMERAS=16,
-	MAX_NUM_REQUESTS=8
+	SIGFD_ID = 1,
+	CAMERA_ID = 0
 };
-enum{
-	CAMERA_ID = 0,
-	SIGFD_ID,
-	LISTENFD_ID,
-	HTTPREQUEST_ID_START,
-	HTTPREQUEST_ID_END = HTTPREQUEST_ID_START+MAX_NUM_REQUESTS
-};
-
 
 
 struct
@@ -45,14 +34,6 @@ struct
 	char username[64];
 	char password[64];
 	char host[256];
-	
-	uint16_t listenPort;
-	unsigned int listenFd;
-	
-	struct{
-		rsva11001_request * request;
-		bool inUse;
-	}requests[MAX_NUM_REQUESTS];
 	
 	int signalFd;
 	sigset_t handledSignals;
@@ -116,14 +97,7 @@ void setupEpollFd(void)
 	struct epoll_event ev;
 	ev.events = EPOLLET | EPOLLIN;
 	ev.data.u32 = SIGFD_ID;
-	
 	if(0 != epoll_ctl(globals.epollFd,EPOLL_CTL_ADD,globals.signalFd,&ev))
-	{
-		terminateOnErrno(epoll_ctl);
-	}
-	
-	ev.data.u32 = LISTENFD_ID;
-	if(0 != epoll_ctl(globals.epollFd,EPOLL_CTL_ADD,globals.listenFd,&ev))
 	{
 		terminateOnErrno(epoll_ctl);
 	}
@@ -159,8 +133,6 @@ void readConfiguration(int argc, char * argv[])
 	strcpy(globals.host,"192.168.12.168");
 	strcpy(globals.password,"1111");
 	strcpy(globals.username,"1111");
-	
-	globals.listenPort = 8080;
 }
 
 void openNextCameraConnection(void)
@@ -188,7 +160,10 @@ void openNextCameraConnection(void)
 		terminateOnErrno(epoll_ctl);
 	}
 	
-	printf("Switched to camera #%u\n" , rsva11001_connection_getChannelNumber(globals.activeCamera));	
+	printf("Switched to camera #%u\n" , globals.cameraIterator);
+
+	
+	
 }
 
 void writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
@@ -197,7 +172,7 @@ void writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
 	
 	char filename[128];
 		
-	snprintf(filename,sizeof(filename),"camera_%u.jpg",rsva11001_connection_getChannelNumber(globals.activeCamera));
+	snprintf(filename,sizeof(filename),"camera_%u.jpg",globals.cameraIterator);
 	filename[sizeof(filename)-1]='\0';
 	
 	//Unlink existing file
@@ -276,7 +251,7 @@ void processActiveCamera(void)
 	
 	if(imageSize!=0)
 	{
-		printf( "%" PRIuFAST32 " bytes from camera #%u\n" , imageSize,rsva11001_connection_getChannelNumber(globals.activeCamera) );
+		printf( "%" PRIuFAST32 " bytes from camera #%u\n" , imageSize,globals.cameraIterator );
 		
 		if(not rsva11001_connection_close(globals.activeCamera))
 		{
@@ -288,103 +263,6 @@ void processActiveCamera(void)
 		globals.activeCamera = NULL;
 	}
 }
-
-void registerNewConnection(int sockfd)
-{
-	uint_fast32_t requestNo = MAX_NUM_REQUESTS;
-	
-	for(unsigned int i = 0 ; i < MAX_NUM_REQUESTS ; ++i)
-	{
-		if( not globals.requests[i].inUse)
-		{
-			requestNo = i;
-			break;
-		}
-	}
-	
-	if(requestNo == MAX_NUM_REQUESTS)
-	{
-		close(sockfd);	
-	}
-	
-	globals.requests[requestNo].inUse = true;
-	
-	if(not globals.requests[requestNo].request)
-	{
-		if( not (globals.requests[requestNo].request = rsva11001_request_malloc()))
-		{
-			close(sockfd);
-			terminate("malloc failed");
-		}
-		
-	}
-	
-	rsva11001_request_associate( globals.requests[requestNo].request, sockfd);
-	
-	struct epoll_event ev;
-	ev.data.u32 = HTTPREQUEST_ID_START + requestNo;
-	ev.events = EPOLLET | EPOLLIN ;
-	
-	if(0!=epoll_ctl(globals.epollFd, EPOLL_CTL_ADD,sockfd,&ev))
-	{
-		terminateOnErrno(epoll_ctl);
-	}
-	
-	return;
-	
-}
-
-void acceptNewConnections(void)
-{	
-	while(true)
-	{
-		struct sockaddr_in addr;
-		socklen_t size = sizeof(addr);
-		
-		const int newFd = accept4(globals.listenFd,&addr,&size,SOCK_NONBLOCK | SOCK_CLOEXEC);
-		
-		if(newFd == -1)
-		{
-			const int error = errno;
-			
-			switch(error)
-			{
-				//No more new connections
-				case EAGAIN:
-					return;
-				default:
-					terminateOnErrno(accept4);
-			}
-			
-		}
-		registerNewConnection(newFd);
-		
-	}
-}
-
-void receiveOnRequest(const uint_fast32_t requestNo)
-{
-	if( not rsva11001_request_recv(globals.requests[requestNo].request))
-	{
-		terminate("Failed to recv on request");
-	}
-	
-	unsigned int channel;
-	
-	if( rsva11001_request_query(globals.requests[requestNo].request,&channel))
-	{
-		//Fill the request
-	}
-}
-
-void sendOnRequest(const uint_fast32_t requestNo)
-{
-	if( not rsva11001_request_send(globals.requests[requestNo].request))
-	{
-		terminate("Failed to send on request");
-	}
-}
-
 
 void reactor(void){
 	
@@ -400,62 +278,30 @@ void reactor(void){
 		struct epoll_event events[MAX_EVENTS];
 		int numEvents = MAX_EVENTS;
 		
-		while(numEvents == MAX_EVENTS and globals.activeCamera!=NULL)
+		while(numEvents == MAX_EVENTS)
 		{		
 			numEvents = epoll_wait(globals.epollFd,events,MAX_EVENTS,-1);
 			
 			if(numEvents == -1)
 			{
-				const int error = errno;
-				
-				switch(error)
-				{
-					//Interrupted system call, this is just something
-					//user space applications have to deal with
-					case EINTR:
-						numEvents = MAX_EVENTS;
-						continue;
-					default:
-						terminateOnErrno(epoll_wait);
-				}
+				terminateOnErrno(epoll_wait);
 			}
 			
 			for(unsigned int i = 0 ; i < numEvents; ++i)
 			{
-				uint32_t const ev = events[i].events;
 				const uint32_t id = events[i].data.u32;
-				
-				if(id >= HTTPREQUEST_ID_START and id < HTTPREQUEST_ID_END)
-				{
-					const uint_fast32_t requestNo = id - HTTPREQUEST_ID_START;
-					if((ev & EPOLLERR) or (ev & EPOLLHUP))
-					{
-						terminate("Got ERR or HUP on request socket");
-					}
-					
-					if(ev & EPOLLIN)
-					{
-						receiveOnRequest(requestNo);
-					}
-					
-					if(ev & EPOLLOUT)
-					{
-						sendOnRequest(requestNo);
-					}
-					continue;
-				}
 				
 				switch(id)
 				{
 					case CAMERA_ID:
 					{
-						
+						uint32_t const ev = events[i].events;
 						
 						if( (ev & EPOLLERR) or (ev & EPOLLHUP) )
 						{
 							if(not rsva11001_connection_close(globals.activeCamera))
 							{
-								terminate("Got ERR or HUP on camera connection socket");
+								terminate("Got ERR on HUP on camera connection socket");
 							}
 							globals.activeCamera = NULL;
 							break;
@@ -469,13 +315,6 @@ void reactor(void){
 						shutdown = true;
 						break;
 					}
-					
-					case LISTENFD_ID:
-					{
-						acceptNewConnections();
-						break;
-					}
-					
 					default:
 						terminate("Unknown ID returned in epoll event");
 				}
@@ -508,44 +347,16 @@ void cleanupCameraConnections(void)
 	}
 }
 
-void setupListenerFd(void)
-{
-	globals.listenFd = socket(AF_INET,SOCK_NONBLOCK | SOCK_CLOEXEC | SOCK_STREAM,0);
-	
-	if(globals.listenFd==-1)
-	{
-		terminateOnErrno(socket);
-	}
-	
-	struct sockaddr_in addr;
-	bzero(&addr,sizeof(addr));
-	
-	addr.sin_family = AF_INET;
-	addr.sin_port = htons(globals.listenPort);
-	addr.sin_addr.s_addr = INADDR_ANY;
-	
-	if(0!=bind(globals.listenFd,&addr,sizeof(addr)))
-	{
-		terminateOnErrno(socket);
-	}
-	
-	if(0!=listen(globals.listenFd,3))
-	{
-		terminateOnErrno(listen);
-	}
-	
-}
-
 int main(int argc, char * argv[]){
 
 	bzero(&globals,sizeof(globals));
 	readConfiguration(argc,argv);
 	
 	setupSignalFd();
-	setupListenerFd();
 	setupEpollFd();
 	
 	setupCameraConnections();
+
 
 	reactor();
 
