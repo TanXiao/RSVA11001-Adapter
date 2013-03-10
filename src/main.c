@@ -543,7 +543,7 @@ void reactor(void){
 		struct epoll_event events[MAX_EVENTS];
 		int numEvents = MAX_EVENTS;
 		
-		while(numEvents == MAX_EVENTS)
+		while(numEvents == MAX_EVENTS and globals.activeCamera!=NULL)
 		{		
 			numEvents = epoll_wait(globals.epollFd,events,MAX_EVENTS,-1);
 			
