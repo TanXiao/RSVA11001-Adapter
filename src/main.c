@@ -305,16 +305,10 @@ void writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
 		terminateOnErrno(open);
 	}
 	
-	//Move to end of file
-	if (-1 == lseek(fd,imageSize-1,SEEK_SET))
+	//Set the filesize
+	if(0!=ftruncate(fd,imageSize-1))
 	{
-		terminateOnErrno(lseek);
-	}
-	
-	//Write a single byte to extend the filesize
-	if(1!=write(fd,"",1))
-	{
-		terminateOnErrno(write);
+		terminateOnErrno(ftruncate);
 	}
 	
 	//mmap the file
