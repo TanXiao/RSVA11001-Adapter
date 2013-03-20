@@ -96,6 +96,10 @@ format.
 
 <table>
 <tr>
+<td><b>Data Type</b></td>
+<td><b>Description</b></td>
+</tr>
+<tr>
 <td>4 byte big endian unsigned integer</td>
 <td>(Length of payload + length of sequence number) in bytes</td>
 </tr>
@@ -129,6 +133,10 @@ The payload is any number of messages of the following format
 
 <table>
 <tr>
+<td><b>Data Type</b></td>
+<td><b>Description</b></td>
+</tr>
+<tr>
 <td>2 byte little endian unsigned integer</td>
 <td>Type of payload</td>
 </tr>
@@ -146,14 +154,21 @@ This message format is from here on out referred to as *T*ype-*L*ength-
 *V*alue or TLV for short.
 
 The following TLV message types have been observed to be sent by the
-server
+server.
 
 <table>
 <tr>
-<td>Type #</td>
-<td>Type Name</td>
-<td>Length (bytes)</td>
-<td>Description</td>
+<td><b>Type #</b></td>
+<td><b>Type Name</b></td>
+<td><b>Length (bytes)</b></td>
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>40</td>
+<td>Version Info</td>
+<td>4</td>
+<td>Major and Minor Version numbers</td>
 </tr>
 
 <tr>
@@ -225,10 +240,10 @@ The client has been observed to send the following messages
 <table>
 
 <tr>
-<td>Type #</td>
-<td>Type Name</td>
-<td>Length (bytes)</td>
-<td>Description</td>
+<td><b>Type #</b></td>
+<td><b>Type Name</b></td>
+<td><b>Length (bytes)</b></td>
+<td><b>Description</b></td>
 </tr>
 
 <tr>
@@ -278,10 +293,44 @@ on the DVR to report as another server. Either way it is a massive
 infringment on the privacy of the users.
 
 Packet captures from Castillo Player 6, available from the Google
-Play store, reveal this behavior has been removed most likely. It's probably
+Play store, reveal this behavior has been removed or otherwise changed. It's probably
 not a good idea to require your clients to always have an active internet
 connection to use a very offline device.
 
+Basic Flow
+---
+
+1.The client opens a TCP connection on port 15961 on the DVR.
+
+2.The client sends an LS message containing a Login Request and a Version
+Info message.
+
+3. The server responds with a LS message containing a Version Info message.
+The client ignores this message.
+
+4. The server responds with a LS message containing a DVS Information Request.
+Older versions of the client use a half-baked DRM scheme to control
+what DVRs can and can't use it. Newer clients appear to ignore this.
+
+5. The server responds with a LS message containing a Channel Data Response message.
+The client uses this to figure out what channel it is being streamed.
+
+6. The server responds with a LS message containing a Stream Format Information
+message. The client uses this to determine video bitrate, frame, width in pixels
+and height in pixels.
+
+7. The server sends another LS message containing a Stream Format Information
+message. The client does the same thng with it again.
+
+8. The server sends a LS message containing a Video Frame Information message
+and a Video I Frame message. The client decodes this video frame.
+
+9. The server sends a never ending stream of LS messages containing Video
+Frame information messages and Video I Frame or P Frame messages. This
+continues until the client sends another LS message causing the server
+to change channel. The server goes back to step 5 at that time.
+
+This continues until the client closes the TCP connection.
 
 
 
