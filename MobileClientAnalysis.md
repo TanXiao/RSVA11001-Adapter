@@ -33,9 +33,7 @@ of JPEG images from the server. Each image is a new frame from the camera.
 Obviously this protocol is incredibly ineffecient in terms of bandwidth
 but is simple to implement on the sending and receiving end.
 
-The request looks like this
-
-In this example, the security DVR has an IP address of 192.168.0.1
+In this example, the security DVR has an IP address of 192.168.0.1. The request looks like this
 
 The client requests the URL `http://192.168.0.1/snapshot.html?username&password&PTZCONTROL=CH1`
 This url contains the username and password in the query string, which is poorly
@@ -115,7 +113,7 @@ format.
 </table>
 
 This message format is from here on out referred to as 
-_L_ength-*S*equence messages or LS.
+**L**ength-**S**equence messages or LS.
 
 The client always starts at sequence number zero and increments.
 The server starts at an arbitrary number and counts up from there. On
@@ -150,8 +148,8 @@ The payload is any number of messages of the following format
 <td>Payload</td>
 </tr>
 
-This message format is from here on out referred to as *T*ype-*L*ength-
-*V*alue or TLV for short.
+This message format is from here on out referred to as **T**ype-**L**ength-
+**V**alue or TLV for short.
 
 The following TLV message types have been observed to be sent by the
 server.
