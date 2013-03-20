@@ -16,6 +16,14 @@ interface I could just use some open source software like
 [motion](http://www.lavrsen.dk/foswiki/bin/view/Motion/WebHome) to scrape
 the web interface and get most of what I needed from that. 
 
+This product is garbage quality. If you bought it and can't return it, then
+you're in the same boat I am. Just to show you how poorly thought out this
+product is, the device requires the installation of a hard drive
+for video recording. Directly from the manual is this warning
+
+     Do not open the covers or insert any object into DVR.
+
+
 Initial Impressions
 -------
 The HTTP server on the box is extremely glitchy. While Newegg claims it is linux
