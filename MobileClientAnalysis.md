@@ -113,7 +113,7 @@ format.
 </table>
 
 This message format is from here on out referred to as 
-**L**ength-**S**equence messages or LS.
+Length-Sequence messages or LS.
 
 The client always starts at sequence number zero and increments.
 The server starts at an arbitrary number and counts up from there. On
@@ -148,8 +148,8 @@ The payload is any number of messages of the following format
 <td>Payload</td>
 </tr>
 
-This message format is from here on out referred to as **T**ype-**L**ength-
-**V**alue or TLV for short.
+This message format is from here on out referred to as Type-Length-
+Value or TLV for short.
 
 The following TLV message types have been observed to be sent by the
 server.
