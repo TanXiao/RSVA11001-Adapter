@@ -52,12 +52,16 @@ to send JPEGS. Each JPEG is encapsulated in the following binary format
 
 <table>
 <tr>
+<td><b>Data or Data Type</b></td>
+<td><b>Description</b></td>
+</tr>
+<tr>
 <td>"JPGS"</td>
 <td>4 character ASCII string, not null terminated</td>
 </tr>
 <tr>
 <td>4 byte big endian unsigned integer</td> 
-<td>Lenth of JPEG image</td>
+<td>Length of JPEG image</td>
 </tr>
 <tr>
 <td>JPEG Payload</td>
@@ -148,8 +152,8 @@ The payload is any number of messages of the following format
 <td>Payload</td>
 </tr>
 
-This message format is from here on out referred to as Type-Length-
-Value or TLV for short.
+This message format is from here on out referred to as Type-Length-Value 
+or TLV for short.
 
 The following TLV message types have been observed to be sent by the
 server.
@@ -188,20 +192,6 @@ server.
 <td>DVS Information Request</td>
 <td>72</td>
 <td>Used to trigger DRM code in Client</td>
-</tr>
-
-<tr>
-<td>97</td>
-<td>Audio</td>
-<td>Variable</td>
-<td>Format Unknown</td>
-</tr>
-
-<tr>
-<td>98</td>
-<td>Audio</td>
-<td>Variable</td>
-<td>Format Unknown</td>
 </tr>
 
 <tr>
@@ -270,6 +260,33 @@ The client has been observed to send the following messages
 <td>Channel Request</td>
 <td>8</td>
 <td>Request to change the channel</td>
+</tr>
+
+</table>
+
+
+These TLV message types should exist but have not been seen
+
+<table>
+<tr>
+<td><b>Type #</b></td>
+<td><b>Type Name</b></td>
+<td><b>Length (bytes)</b></td>
+<td><b>Description</b></td>
+</tr>
+
+<tr>
+<td>97</td>
+<td>Audio Info</td>
+<td>???</td>
+<td>Format Unknown</td>
+</tr>
+
+<tr>
+<td>98</td>
+<td>Audio Data</td>
+<td>????</td>
+<td>Format Unknown</td>
 </tr>
 
 </table>
