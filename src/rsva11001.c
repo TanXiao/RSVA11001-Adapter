@@ -647,7 +647,7 @@ bool rsva11001_connection_process(rsva11001_connection * const this)
 			}
 		}
 		
-		const uint_fast16_t amountReceived = (uint_fast32_t)recvResult;
+		const uint_fast32_t amountReceived = (uint_fast32_t)recvResult;
 		
 		//Call the parser since data has arrived
 		http_parser_execute(& this->parser, & this->settings, buffer,amountReceived);

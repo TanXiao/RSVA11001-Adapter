@@ -66,6 +66,8 @@ struct
 	
 }globals;
 
+static rsva11001adapter_logger * logger;
+
 #define terminateOnErrno(_source)do{\
 char buf[256];\
 const int error = errno;\
@@ -80,7 +82,7 @@ printf("Failure @ %s:%i:%s reason %s, terminating.\n",__FILE__,__LINE__,__func__
 exit(1);\
 }while(0);
 
-void setupSignalFd(void)
+bool setupSignalFd(void)
 {
 	sigemptyset(&globals.handledSignals);
 	sigaddset(&globals.handledSignals,SIGINT);
@@ -91,7 +93,8 @@ void setupSignalFd(void)
 	//block these signals
 	if(0!=sigprocmask(SIG_BLOCK,&globals.handledSignals,NULL))
 	{
-		terminateOnErrno(sigprocmask);
+		RSVA11001ADAPTER_LOGERRNO(logger,sigprocmask);
+		return false;
 	}
 	
 	//Create an FD to listen for those signals
@@ -99,19 +102,22 @@ void setupSignalFd(void)
 	
 	if(globals.signalFd == -1 )
 	{
-		terminateOnErrno(signalfd);
+		RSVA11001ADAPTER_LOGERRNO(logger,signalfd);
+		return false;
 	}
 	
 	globals.lastSignal.amountReceived = 0;
+	return true;
 }
 
-void setupEpollFd(void)
+bool setupEpollFd(void)
 {
 	globals.epollFd = epoll_create1(EPOLL_CLOEXEC);
 	
 	if(globals.epollFd == -1)
 	{
-		terminateOnErrno(epoll_create1);
+		RSVA11001ADAPTER_LOGERRNO(logger,epoll_create1);
+		return false;
 	}
 
 	struct epoll_event ev;
@@ -119,12 +125,15 @@ void setupEpollFd(void)
 	ev.data.u32 = SIGFD_ID;
 	if(0 != epoll_ctl(globals.epollFd,EPOLL_CTL_ADD,globals.signalFd,&ev))
 	{
-		terminateOnErrno(epoll_ctl);
+		RSVA11001ADAPTER_LOGERRNO(logger,epoll_ctl);
+		return false;
 	}
+	
+	return true;
 		
 }
 
-void setupCameraConnections(void)
+bool setupCameraConnections(void)
 {
 	bzero(globals.conns,sizeof(globals.conns));
 	globals.cameraIterator = 0;
@@ -135,19 +144,24 @@ void setupCameraConnections(void)
 
 		if(not conn)
 		{			
-			terminate("Failed to malloc memory for connection object");
+			RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_FATAL,"Failed to malloc memory for connection object");
+			return false;
 		}
 		
 		if( not rsva11001_connection_configure(conn,globals.host,globals.username,globals.password,i+1))
-		{
-			terminate("Bad camera connection configuration");
+		{			
+			RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_FATAL,"Camera configuration invalid");
+			return false;
 		}
+
 		globals.conns[i] = conn;
 	}
 	
+	return true;
+	
 }
 
-void readConfiguration(int argc, char * argv[])
+bool readConfiguration(int argc, char * argv[])
 {
 
 	const char * const  RSVA11001_HOST = getenv("RSVA11001_HOST");
@@ -157,22 +171,26 @@ void readConfiguration(int argc, char * argv[])
 	
 	if( not RSVA11001_HOST)
 	{
-		terminate("Missing env. var. RSVA11001_HOST");
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_FATAL,"Missing env. var. RSVA11001_HOST");
+		return false;
 	}
 	
 	if ( not RSVA11001_PASSWORD)
 	{
-		terminate("Missing env. var. RSVA11001_PASSWORD");
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_FATAL,"Missing env. var. RSVA11001_PASSWORD");
+		return false;
 	}
 	
 	if ( not RSVA11001_HOST)
 	{
-		terminate("Missing env. var. RSVA11001_HOST");
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_FATAL,"Missing env. var. RSVA11001_HOST");
+		return false;
 	}
 	
 	if ( not RSVA11001_NUM_CAMERAS)
 	{
-		terminate("Missing env. var. RSVA11001_NUM_CAMERAS");
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_FATAL,"Missing env. var. RSVA11001_NUM_CAMERAS");
+		return false;
 	}
 
 	strcpy(globals.host,RSVA11001_HOST);
@@ -186,18 +204,25 @@ void readConfiguration(int argc, char * argv[])
 	
 	if (v == ULONG_MAX and errno !=0)
 	{
-		terminate("Env. var. RSVA11001_NUM_CAMERAS is NaN");
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_FATAL,"Env. var. RSVA11001_NUM_CAMERAS is NaN");
+		return false;
 	}
 	
 	if (v >=MAX_NUM_CAMERAS or v > UINT_MAX)
 	{
-		terminate("Env. var. RSVA11001_NUM_CAMERAS is too large");
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_FATAL,"Env. var. RSVA11001_NUM_CAMERAS is too large");
+		return false;
 	}
 	
 	globals.numCameras = (unsigned int) v;
+	
+	RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_INFO,"Host:%s",globals.host);
+	RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_INFO,"Username:%s",globals.username);
+	RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_INFO,"Number of Cameras:%u",globals.numCameras);
+	return true;
 }
 
-void openNextCameraConnection(void)
+bool openNextCameraConnection(void)
 {
 	globals.activeCamera = globals.conns[globals.cameraIterator++];
 	
@@ -207,10 +232,13 @@ void openNextCameraConnection(void)
 		
 	}
 
+	RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_TRACE,"Switched to camera #%u",globals.cameraIterator);	
+
 	assert(globals.activeCamera != NULL);
 	if(not rsva11001_connection_open(globals.activeCamera))
 	{
-		terminate(rsva11001_connection_getLastError(globals.activeCamera));
+		RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_FATAL,"Error from rsva11001_connection_open:%s",rsva11001_connection_getLastError(globals.activeCamera));
+		return false;
 	}
 	
 	const int fd = rsva11001_connection_getFd(globals.activeCamera);
@@ -219,13 +247,11 @@ void openNextCameraConnection(void)
 	ev.data.u32 = CAMERA_ID;
 	if(0 != epoll_ctl(globals.epollFd, EPOLL_CTL_ADD,fd,&ev))
 	{
-		terminateOnErrno(epoll_ctl);
+		RSVA11001ADAPTER_LOGERRNO(logger,epoll_ctl);
+		return false;
 	}
-	
-	printf("Switched to camera #%u\n" , globals.cameraIterator);
 
-	
-	
+	return true;
 }
 
 bool sendJpeg(sg_connection * conn, uint8_t const * const data, uint_fast32_t size)
@@ -273,7 +299,7 @@ bool sendJpeg(sg_connection * conn, uint8_t const * const data, uint_fast32_t si
 	}
 }
 
-void writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
+bool writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
 {
 	assert(buffer!=NULL);
 	
@@ -282,6 +308,7 @@ void writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
 	snprintf(filename,sizeof(filename),"camera_%u.jpg",globals.cameraIterator);
 	filename[sizeof(filename)-1]='\0';
 	
+	RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_TRACE,"Unlinking file:%s",filename);
 	//Unlink existing file
 	if(0!=unlink(filename))
 	{
@@ -290,25 +317,32 @@ void writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
 		{
 			//Means file didn't exist, not a problem
 			case ENOENT:
+				RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_DEBUG,"File did not exist");
 				break;
 			default:
-				terminateOnErrno(unlink);
+				RSVA11001ADAPTER_LOGERRNO(logger,unlink);
+				return false;
 		}
 	}
 	
 	//Create file to contain output
+	RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_TRACE,"Opening file:%s",filename);
 	const int fd = open(filename,O_CLOEXEC|O_CREAT|O_RDWR,S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	
 	//Check for error on opening file
 	if(fd == -1)
 	{
-		terminateOnErrno(open);
+		RSVA11001ADAPTER_LOGERRNO(logger,open);
+		return false;
 	}
 	
 	//Set the filesize
-	if(0!=ftruncate(fd,imageSize-1))
+	const uint_fast32_t filesize = imageSize-1;
+	RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_TRACE,"Setting file size to %" PRIuFAST32,filesize);
+	if(0!=ftruncate(fd,filesize))
 	{
-		terminateOnErrno(ftruncate);
+		RSVA11001ADAPTER_LOGERRNO(logger,ftruncate);
+		return false;
 	}
 	
 	//mmap the file
@@ -317,7 +351,8 @@ void writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
 	//Check for mmap failure
 	if((void*)dst == MAP_FAILED)
 	{
-		terminateOnErrno(mmap);	
+		RSVA11001ADAPTER_LOGERRNO(logger,mmap);
+		return false;
 	}
 	
 	//Close the file descriptor
@@ -362,15 +397,22 @@ void writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
 		char const * errmsg = sg_server_getLastError(globals.server);
 		terminate(errmsg);
 	}
+	
+	return true;
 }
 
-void processActiveCamera(void)
+//Return value
+// 0 - no error
+// -1 - error
+// -2 - fatal error
+int processActiveCamera(void)
 {
 	assert(globals.activeCamera!=NULL);
 	
 	if( not rsva11001_connection_process(globals.activeCamera))
 	{
-		terminate(rsva11001_connection_getLastError(globals.activeCamera));
+		RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_ERROR,"Error processing camera connection: %s" , rsva11001_connection_getLastError(globals.activeCamera));
+		return -1;
 	}
 	
 	uint8_t buffer[30000];
@@ -378,22 +420,30 @@ void processActiveCamera(void)
 	
 	if( not rsva11001_connection_getLatestImage(globals.activeCamera,buffer, &imageSize))
 	{
-		terminate(rsva11001_connection_getLastError(globals.activeCamera));
+		RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_ERROR,"Error getting latest image from camera connection: %s" , rsva11001_connection_getLastError(globals.activeCamera));
+		return -1;
 	}		
 	
 	if(imageSize!=0)
 	{
-		printf( "%" PRIuFAST32 " bytes from camera #%u\n" , imageSize,globals.cameraIterator );
-		
+		RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_TRACE,"%" PRIuFAST32 " bytes from camera #%u\n" , imageSize,globals.cameraIterator);
+
 		if(not rsva11001_connection_close(globals.activeCamera))
 		{
-			terminate(rsva11001_connection_getLastError(globals.activeCamera));
+			RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_FATAL,"Error closing camera connection: %s" , rsva11001_connection_getLastError(globals.activeCamera));			
+			return -2;
 		}
 		
-		writeImageFile(buffer,imageSize);
+		if( not writeImageFile(buffer,imageSize) )
+		{
+			RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_ERROR,"Error writing image file");
+			return -1;
+		}
 		
 		globals.activeCamera = NULL;
 	}
+	
+	return 0;
 }
 
 
@@ -523,14 +573,19 @@ bool handleNewRequest(sg_connection * conn)
 	return true;
 }
 
-void reactor(void){
+bool reactor(void){
 	
 	bool shutdown  = false;
 	while(not shutdown)
 	{
 		if(not globals.activeCamera)
 		{
-			openNextCameraConnection();
+			if( not openNextCameraConnection() )
+			{
+				RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_FATAL,"Failed to open next camera connection");
+				shutdown = true;
+				continue;
+			}
 		}
 		
 		static const  int MAX_EVENTS = 4;
@@ -548,11 +603,15 @@ void reactor(void){
 				//This just seems to happen. It can be safely ignored
 				if (errno == EINTR)
 				{
+					RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_DEBUG,"Ignoring EINTR from epoll_wait");
 					continue;
 				}
 				
-				terminateOnErrno(epoll_wait);
+				RSVA11001ADAPTER_LOGERRNO(logger,epoll_wait);
+				return false;
 			}
+			
+			RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_TRACE,"Got %i events from epoll_wait",numEvents);
 			
 			for(unsigned int i = 0 ; i < numEvents; ++i)
 			{
@@ -562,29 +621,67 @@ void reactor(void){
 				{
 					case CAMERA_ID:
 					{
+						RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_TRACE,"Got event on camera connection");
 						uint32_t const ev = events[i].events;
 						
+						//Check for error or socket close on camera connection
 						if( (ev & EPOLLERR) or (ev & EPOLLHUP) )
 						{
+							//Not a big deal, just log and close the connection
+							RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_ERROR,"Got ERR or HUP on camera connection socket");
 							if(not rsva11001_connection_close(globals.activeCamera))
 							{
-								terminate("Got ERR on HUP on camera connection socket");
+								//If the connection failed to close, there is an issue, shutdown
+								shutdown = true;
+								RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_FATAL,"Failed to close camera connection: %s",rsva11001_connection_getLastError(globals.activeCamera));
+								break;
 							}
 							globals.activeCamera = NULL;
 							break;
 						}
 						
-						processActiveCamera();
+						switch(processActiveCamera())
+						{
+							case 0:
+								break;
+							
+							//Error
+							case -1:
+							{
+								//Not a big deal, just log and close the connection
+								RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_ERROR,"Error while processing camera connnection");
+								if(not rsva11001_connection_close(globals.activeCamera))
+								{
+									//If the connection failed to close, there is an issue, shutdown
+									shutdown = true;
+									RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_FATAL,"Failed to close camera connection: %s",rsva11001_connection_getLastError(globals.activeCamera));
+									break;
+								}
+								globals.activeCamera = NULL;
+							}
+							break;
+							//Fatal error
+							case -2:
+							default:
+							{
+								shutdown = true;
+								RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_FATAL,"Failed to processing camera connection");
+								break;
+							}
+
+						}
 						break;
 					}
 					case SIGFD_ID:
 					{
+						RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_DEBUG,"Got event on signal fd");
 						shutdown = true;
 						break;
 					}
 					
 					case SCGI_ID:
 					{
+						RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_TRACE,"Got event on SCGI connection");
 						if ( not sg_server_process(globals.server) )
 						{
 							char const * errmsg = sg_server_getLastError(globals.server);
@@ -598,7 +695,7 @@ void reactor(void){
 						}
 						if ( not sg_server_process(globals.server) )
 						{
-							char const * errmsg = sg_server_getLastError(globals.server);
+							char const * const errmsg = sg_server_getLastError(globals.server);
 							terminate(errmsg);
 						}
 
@@ -612,6 +709,8 @@ void reactor(void){
 		}
 		
 	}
+	
+	return true;
 	
 }
 
@@ -642,6 +741,7 @@ bool setupScgiServer(void)
 	
 	if(not globals.server)
 	{
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_FATAL,"Failed to malloc sg_server");
 		return false;
 	}
 	
@@ -649,12 +749,17 @@ bool setupScgiServer(void)
 	
 	if( not sg_server_init(globals.server) )
 	{
+		RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_FATAL,"Failed to initialize sg_server %s", sg_server_getLastError(globals.server));
+		free(globals.server);
 		return false;
 	}
 	
 	const int fd = sg_server_getFileDescriptor(globals.server);
 	if(fd < 0)
 	{
+		RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_FATAL,"Incoherent File Descriptor from sg_server:%i",fd);
+		sg_server_destroy(globals.server);
+		free(globals.server);
 		return false;
 	}
 	
@@ -666,7 +771,9 @@ bool setupScgiServer(void)
 	
 	if(0!=epoll_ctl(globals.epollFd,EPOLL_CTL_ADD,fd,&ev))
 	{
-		terminateOnErrno("epoll_ctl");
+		RSVA11001ADAPTER_LOGERRNO(logger,epoll_ctl);
+		sg_server_destroy(globals.server);
+		free(globals.server);
 		return false;
 	}
 	
@@ -682,14 +789,42 @@ void closeScgiServer(void)
 
 int main(int argc, char * argv[]){
 
+	rsva11001adapter_logger localLogger;
+	logger = &localLogger;
+	
+	//Set the logger's output to stdout
+	logger->logFd = fileno(stdout);
+	//Set the loglevel
+	logger->logLevel = RSVA11001ADAPTER_TRACE;
+	
+	RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_INFO,"Started");
+	
 	bzero(&globals,sizeof(globals));
-	readConfiguration(argc,argv);
 	
-	setupSignalFd();
-	setupEpollFd();
+	if( not readConfiguration(argc,argv) )
+	{
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_FATAL,"Failed reading configuration");
+		return 1;
+	}
 	
-	setupCameraConnections();
+	if( not setupSignalFd() )
+	{
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_FATAL,"Failed setting up signal fd");
+		return 1;
+	}
 
+	if( not setupEpollFd() )
+	{
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_FATAL,"Failed setting up epoll fd");
+		return 1;
+	}
+	
+	if ( not setupCameraConnections() )
+	{
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_FATAL,"Failed setting up camera connections");
+		return 1;
+	}
+	
 	if( not setupScgiServer())
 	{
 		goto cleanUpFds;
