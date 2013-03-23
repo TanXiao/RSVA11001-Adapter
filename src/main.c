@@ -21,6 +21,7 @@
 #include "sandgrouse/queryStringParser.h"
 #include "sandgrouse/util.h"
 #include "limits.h"
+#include "log.h"
 
 enum{
 	MAX_NUM_CAMERAS=8,
@@ -29,7 +30,6 @@ enum{
 	SIGFD_ID = 1,
 	CAMERA_ID = 0
 };
-
 
 struct
 {
