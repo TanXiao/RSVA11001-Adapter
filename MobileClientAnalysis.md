@@ -320,27 +320,27 @@ Basic Flow
 2.The client sends an LS message containing a Login Request and a Version
 Info message.
 
-3. The server responds with a LS message containing a Version Info message.
+3.The server responds with a LS message containing a Version Info message.
 The client ignores this message.
 
-4. The server responds with a LS message containing a DVS Information Request.
+4.The server responds with a LS message containing a DVS Information Request.
 Older versions of the client use a half-baked DRM scheme to control
 what DVRs can and can't use it. Newer clients appear to ignore this.
 
-5. The server responds with a LS message containing a Channel Data Response message.
+5.The server responds with a LS message containing a Channel Data Response message.
 The client uses this to figure out what channel it is being streamed.
 
-6. The server responds with a LS message containing a Stream Format Information
+6.The server responds with a LS message containing a Stream Format Information
 message. The client uses this to determine video bitrate, frame, width in pixels
 and height in pixels.
 
-7. The server sends another LS message containing a Stream Format Information
+7.The server sends another LS message containing a Stream Format Information
 message. The client does the same thng with it again.
 
-8. The server sends a LS message containing a Video Frame Information message
+8.The server sends a LS message containing a Video Frame Information message
 and a Video I Frame message. The client decodes this video frame.
 
-9. The server sends a never ending stream of LS messages containing Video
+9.The server sends a never ending stream of LS messages containing Video
 Frame information messages and Video I Frame or P Frame messages. This
 continues until the client sends another LS message causing the server
 to change channel. The server goes back to step 5 at that time.
