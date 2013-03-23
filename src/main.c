@@ -68,20 +68,6 @@ struct
 
 static rsva11001adapter_logger * logger;
 
-#define terminateOnErrno(_source)do{\
-char buf[256];\
-const int error = errno;\
-const char * const str = strerror_r(error, buf,sizeof(buf));\
-printf("Call to %s @ %s:%i:%s generated %s, terminating.\n",#_source,__FILE__,__LINE__,__func__,str); \
-exit(1);\
-}while(0);
-
-
-#define terminate(msg)do{\
-printf("Failure @ %s:%i:%s reason %s, terminating.\n",__FILE__,__LINE__,__func__,msg); \
-exit(1);\
-}while(0);
-
 bool setupSignalFd(void)
 {
 	sigemptyset(&globals.handledSignals);
@@ -274,6 +260,7 @@ bool sendJpeg(sg_connection * conn, uint8_t const * const data, uint_fast32_t si
 	char buffer[16];
 	if(sizeof(buffer) == snprintf(buffer,sizeof(buffer),"%" PRIuFAST32 ,size) )
 	{
+		RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_ERROR,"Unusually large image size %" PRIuFAST32 ", sending 404",size);
 		sg_send404(conn);
 		return true;
 	}
@@ -295,8 +282,11 @@ bool sendJpeg(sg_connection * conn, uint8_t const * const data, uint_fast32_t si
 	assert(numHeaders < MAX_NUM_HEADERS);
 	if ( not sg_connection_writeResponse(conn,headerKeys,headerValues,numHeaders,data,size) )
 	{
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_ERROR,"Failed writing response");
 		return false;
 	}
+	
+	return true;
 }
 
 bool writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
@@ -358,7 +348,8 @@ bool writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
 	//Close the file descriptor
 	if(0!=close(fd))
 	{
-		terminateOnErrno(close);
+		RSVA11001ADAPTER_LOGERRNO(logger,close);
+		return false;
 	}
 	
 	//Copy the image into the file
@@ -371,7 +362,8 @@ bool writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
 	{
 		if(0!=munmap((void*)globals.lastImage[globals.cameraIterator].data,globals.lastImage[globals.cameraIterator].size))
 		{
-			terminateOnErrno(munmap);
+			RSVA11001ADAPTER_LOGERRNO(logger,munmap);
+			return false;
 		}
 	}
 	
@@ -382,20 +374,26 @@ bool writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
 	for(unsigned int i = 0 ; i < globals.pendingRequests[globals.cameraIterator].numPending ; ++i)
 	{
 		sg_connection * conn = globals.pendingRequests[globals.cameraIterator].connections[i];
-		
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_DEBUG,"Filling pending request for camera");
+
 		assert(conn!=NULL);
 		
-		sendJpeg(conn,globals.lastImage[globals.cameraIterator].data,globals.lastImage[globals.cameraIterator].size);
+		if( not sendJpeg(conn,globals.lastImage[globals.cameraIterator].data,globals.lastImage[globals.cameraIterator].size) )
+		{
+			RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_ERROR,"Failed sending jpeg");
+		}
 		
 		globals.pendingRequests[globals.cameraIterator].connections[i] = NULL;
 	}
 
 	globals.pendingRequests[globals.cameraIterator].numPending  = 0;
 	
+	//TODO move this call to reactor
 	if ( not sg_server_process(globals.server) )
 	{
-		char const * errmsg = sg_server_getLastError(globals.server);
-		terminate(errmsg);
+		char const * const errmsg = sg_server_getLastError(globals.server);
+		RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_ERROR,"Failed calling sg_server_process:%s",errmsg);
+		return false;
 	}
 	
 	return true;
@@ -426,7 +424,7 @@ int processActiveCamera(void)
 	
 	if(imageSize!=0)
 	{
-		RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_TRACE,"%" PRIuFAST32 " bytes from camera #%u\n" , imageSize,globals.cameraIterator);
+		RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_TRACE,"%" PRIuFAST32 " bytes from camera #%u" , imageSize,globals.cameraIterator);
 
 		if(not rsva11001_connection_close(globals.activeCamera))
 		{
@@ -453,6 +451,7 @@ bool handleNewRequest(sg_connection * conn)
 	
 	if(method == NULL or 0!= strcmp(method,"GET"))
 	{
+		RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_ERROR,"Unsupported method:%s",method);
 		sg_send404(conn);
 		return true;
 	}
@@ -461,12 +460,14 @@ bool handleNewRequest(sg_connection * conn)
 	
 	if(pathInfo == NULL)
 	{
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_ERROR,"PATH_INFO missing");
 		sg_send404(conn);
 		return true;
 	}
 	
 	if(0!=strcmp("/camera.jpg",pathInfo))
 	{
+		RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_ERROR,"Unsupported path :%s",pathInfo);
 		sg_send404(conn);
 		return true;
 	}
@@ -476,6 +477,7 @@ bool handleNewRequest(sg_connection * conn)
 	
 	if(queryString == NULL)
 	{
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_ERROR,"QUERY_STRING missing");
 		sg_send404(conn);
 		return true;
 	}
@@ -484,6 +486,7 @@ bool handleNewRequest(sg_connection * conn)
 	
 	if ( not sg_queryStringParser_init(&parser,queryString) )
 	{
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_ERROR,"Failed parsing query string");
 		sg_send404(conn);
 		return true;
 	}
@@ -496,6 +499,7 @@ bool handleNewRequest(sg_connection * conn)
 	
 	if( not sg_queryStringParser_findFirst(&parser,"source",buffer,&length))
 	{
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_ERROR,"Failed searching for 'source' query string parameter");
 		sg_send404(conn);
 		return true;
 	}
@@ -537,11 +541,14 @@ bool handleNewRequest(sg_connection * conn)
 		src = (unsigned int)v;
 	}
 	
+	RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_DEBUG,"Request for camera source:%u",src);
+	
 	assert(src < globals.numCameras);
 	
 	length = sizeof(buffer);
 	if( not sg_queryStringParser_findFirst(&parser,"wait",buffer,&length))
 	{
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_ERROR,"Failed searching for 'wait' query string parameter");
 		sg_send404(conn);
 		return true;
 	}
@@ -549,6 +556,7 @@ bool handleNewRequest(sg_connection * conn)
 	//If requested to wait for the latest image, don't fill it now
 	if(length == 1 and buffer[0] == '1')
 	{
+		RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_ERROR,"Request not being filled immediately, waiting for new image");
 		uint_fast32_t const index = globals.pendingRequests[src].numPending;
 		globals.pendingRequests[src].connections[index] = conn;
 		globals.pendingRequests[src].numPending++;
@@ -560,12 +568,16 @@ bool handleNewRequest(sg_connection * conn)
 		
 		if (imageData == NULL)
 		{
+			RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_DEBUG,"Dont yet have camera data, returning 404");
 			sg_send404(conn);
 			return true;
 		}
 		
+		RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_DEBUG,"Sending %" PRIuFAST32 " bytes",imageSize);
+		
 		if(not sendJpeg(conn,imageData,imageSize))
 		{
+			RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_ERROR,"Failed sending JPEG");
 			return false;
 		}
 	}
@@ -684,25 +696,36 @@ bool reactor(void){
 						RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_TRACE,"Got event on SCGI connection");
 						if ( not sg_server_process(globals.server) )
 						{
-							char const * errmsg = sg_server_getLastError(globals.server);
-							terminate(errmsg);
+							char const * const errmsg = sg_server_getLastError(globals.server);
+							RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_FATAL,"Failed calling sg_server_process:%s",errmsg);
+							shutdown = true;
+							break;
 						}
 						//Check for new request						
 						sg_connection * conn;
 						while( NULL != (conn = sg_server_getNextConnection(globals.server)))
 						{
-							handleNewRequest(conn);
+							if ( not handleNewRequest(conn)) 
+							{
+								shutdown = true;
+								RSVA11001ADAPTER_LOG(logger,RSVA11001ADAPTER_FATAL,"Failed handling new connection");
+								break;
+							}
 						}
 						if ( not sg_server_process(globals.server) )
 						{
 							char const * const errmsg = sg_server_getLastError(globals.server);
-							terminate(errmsg);
+							RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_FATAL,"Failed calling sg_server_process:%s",errmsg);
+							shutdown = true;
+							break;
 						}
 
 					}
 					break;
 					default:
-						terminate("Unknown ID returned in epoll event");
+						RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_FATAL,"Unknown ID returned in epoll event:%" PRIu32,id);
+						shutdown = true;
+						break;
 				}
 			}
 			
@@ -724,7 +747,7 @@ void cleanupCameraConnections(void)
 		
 		if( not rsva11001_connection_close(camera))
 		{
-			terminate(rsva11001_connection_getLastError(camera));
+			RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_ERROR,"Error closing camera connection #%u:%s",i,rsva11001_connection_getLastError(camera));
 		}
 		
 		rsva11001_connection_destroy(camera);
