@@ -337,7 +337,7 @@ bool writeImageFile(uint8_t const * const buffer, uint_fast32_t imageSize)
 	}
 	
 	//Set the filesize
-	const uint_fast32_t filesize = imageSize-1;
+	const uint_fast32_t filesize = imageSize;
 	RSVA11001ADAPTER_LOGFMT(logger,RSVA11001ADAPTER_TRACE,"Setting file size to %" PRIuFAST32,filesize);
 	if(0!=ftruncate(fd,filesize))
 	{
