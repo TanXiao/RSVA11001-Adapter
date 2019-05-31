@@ -159,8 +159,8 @@ These lines are the password for the root user in /etc/shadow format
     root:$1$$qRPK7m23GJusamGpoGLby/:0:0::/root:/bin/sh
     root:ab8nBoH3mb8.g:0:0::/root:/bin/sh
     
-If someone wants to decrypt those, it would be of a great aid. A rainbow
-table can probably be used.
+The first password is empty. (http://en.miui.com/thread-517867-1-1.html)
+The second password is "helpme".
 
 It should be possible to force them to release the source code, or at least force
 Newegg since it is an American company. It seems unlikely that [Huawei will cooperate](http://huaweihg612hacking.wordpress.com/2011/11/12/huawei-releases-source-code-for-hg612/).
